@@ -25,6 +25,9 @@
   "homepage": "https://github.com/maxgurewitz/personal-site-typescript#readme",
   "devDependencies": {
     "budo": "^8.3.0",
+    "react": "^15.3.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
     "tsify": "^1.0.3",
     "typescript": "^1.8.10"
   }
