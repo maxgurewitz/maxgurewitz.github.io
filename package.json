@@ -33,7 +33,7 @@
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
     "tsify": "^1.0.3",
-    "typescript": "^2.0.0"
+    "typescript": "^2.1.0-dev.20160809"
   },
   "dependencies": {}
 }
