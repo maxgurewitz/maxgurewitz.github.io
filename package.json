@@ -24,11 +24,16 @@
   },
   "homepage": "https://github.com/maxgurewitz/personal-site-typescript#readme",
   "devDependencies": {
+    "@types/react": "^0.14.29",
+    "@types/react-dom": "^0.14.14",
+    "@types/react-redux": "^4.4.29",
     "budo": "^8.3.0",
     "react": "^15.3.0",
+    "react-dom": "^15.3.0",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
     "tsify": "^1.0.3",
-    "typescript": "^1.8.10"
-  }
+    "typescript": "^2.0.0"
+  },
+  "dependencies": {}
 }

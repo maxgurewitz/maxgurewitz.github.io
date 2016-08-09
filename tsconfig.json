@@ -1,0 +1,10 @@
+{
+  "files": [
+    "dev.ts"
+  ],
+ "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "jsx": "react"
+ }
+}

@@ -1,3 +1,3 @@
-import personalSite from './src/index.ts';
+import personalSite from './src/index.tsx';
 
-personalSite.render('body');
+personalSite.render('#app');
