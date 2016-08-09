@@ -4,7 +4,7 @@
   "description": "Personal site implemented in typescript.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "budo src/index.ts --live --open --host localhost -- -p [ tsify --noImplicitAny ]"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/maxgurewitz/personal-site-typescript/issues"
   },
-  "homepage": "https://github.com/maxgurewitz/personal-site-typescript#readme"
+  "homepage": "https://github.com/maxgurewitz/personal-site-typescript#readme",
+  "devDependencies": {
+    "budo": "^8.3.0",
+    "tsify": "^1.0.3",
+    "typescript": "^1.8.10"
+  }
 }
