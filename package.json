@@ -4,7 +4,7 @@
   "description": "Personal site implemented in typescript.",
   "main": "index.js",
   "scripts": {
-    "start": "budo src/index.ts --live --open --host localhost -- -p [ tsify --noImplicitAny ]"
+    "start": "budo dev.ts --live --open --host localhost -- -p [ tsify --noImplicitAny ]"
   },
   "repository": {
     "type": "git",
