@@ -2,11 +2,12 @@ import * as React from 'react';
 import {render as reactRender} from 'react-dom';
 import {createStore} from 'redux';
 import {connect, Provider} from 'react-redux';
+import {Avatar, LinkBlock} from 'rebass';
+import {GITHUB_LOGO} from './base64Images';
 
 function increment(dispatch : Dispatch) {
   return () => dispatch({ type: 'increment' });
 }
-
 
 interface ViewPayload {
   state : Model,
@@ -20,10 +21,30 @@ interface View {
 const view : View = function view(payload) {
   const {state, dispatch} = payload;
 
+  const navBarStyle = {
+    backgroundColor: '#ddd',
+    color: 'white',
+    left: 0,
+    right: 0,
+    margin: 0,
+    position: 'fixed',
+    top: 0,
+    borderRadius: '2px',
+    padding: '.5em',
+    zIndex: 10
+  };
+
+  const linkBlockStyle = {
+    float: 'right'
+  };
+
   return (
     <div>
-      count: {state.count}
-      <button onClick={increment(dispatch)}> increment </button>
+      <div style={navBarStyle}>
+        <LinkBlock href="https://github.com/maxgurewitz/personal-site-typescript" style={linkBlockStyle}>
+          <Avatar src={GITHUB_LOGO}/>
+        </LinkBlock>
+      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@
   "description": "Personal site implemented in typescript.",
   "main": "index.js",
   "scripts": {
-    "start": "budo dev.ts --live --open --host localhost -- -p [ tsify --noImplicitAny ]"
+    "start": "budo dev.ts --live --open --host localhost -- -p [ tsify --noImplicitAny ] --debug"
   },
   "repository": {
     "type": "git",
@@ -27,13 +27,14 @@
     "@types/react": "^0.14.29",
     "@types/react-dom": "^0.14.14",
     "@types/react-redux": "^4.4.29",
+    "@types/rebass": "^0.2.15",
     "budo": "^8.3.0",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-redux": "^4.4.5",
+    "rebass": "^0.3.1",
     "redux": "^3.5.2",
     "tsify": "^1.0.3",
     "typescript": "^2.1.0-dev.20160809"
-  },
-  "dependencies": {}
+  }
 }
