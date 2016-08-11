@@ -24,11 +24,13 @@
   },
   "homepage": "https://github.com/maxgurewitz/personal-site-typescript#readme",
   "devDependencies": {
+    "@types/lodash": "^4.14.30",
     "@types/react": "^0.14.29",
     "@types/react-dom": "^0.14.14",
     "@types/react-redux": "^4.4.29",
     "@types/rebass": "^0.2.15",
     "budo": "^8.3.0",
+    "lodash-es": "^4.14.2",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-redux": "^4.4.5",
