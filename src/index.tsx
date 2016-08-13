@@ -4,7 +4,7 @@ import {createStore} from 'redux';
 import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base64Images';
-import {assign} from 'lodash';
+import {assign, cloneDeep} from 'lodash';
 
 enum ActionType {
   Increment,
@@ -99,8 +99,6 @@ const PageViewCases : Cases<View> = {
 const view : View = function view(payload) {
   const {state, dispatch} = payload;
 
-  console.log('loc2', state);
-  // FIXME: dispatch isn't working
   return (
     <div>
       <div style={navBarStyle}>
@@ -170,9 +168,8 @@ function evaluateCase<T>(type : number, cases : Cases<T>) : T {
   return cases[type] || cases.default;
 }
 
-function update(state : Model, action: Action) {
-  console.log('loc1', action);
-  return evaluateCase(action.type, updateCases)(state, action);
+function update(state : Model, action: Action) : Model {
+  return evaluateCase(action.type, updateCases)(cloneDeep(state), action);
 }
 
 export default {
