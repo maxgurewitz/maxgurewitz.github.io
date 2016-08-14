@@ -66,8 +66,8 @@ const navItemStyle = {
 const avatarStyle = {
   borderRadius: '6px',
   marginRight: 'auto',
-  maxHeight: '80%',
-  maxWidth: '80%',
+  maxHeight: '60%',
+  maxWidth: '60%',
   alignSelf: 'center'
 };
 
@@ -106,8 +106,20 @@ const profileImageStyle = {
 };
 
 const aboutTextStyle = {
-  borderRadius: '3px',
-  border: '1px solid #ddd'
+  borderRadius: '0 0 3px 3px',
+  borderColor: '#ddd',
+  borderStyle: 'solid',
+  padding: '2.81em',
+  borderWidth: '0 1px 1px 1px',
+};
+
+const aboutTextHeaderStyle = {
+  borderRadius: '3px 3px 0 0',
+  border: '1px solid #ddd',
+  fontWeight: 600,
+  backgroundColor: '#f5f5f5',
+  fontSize: '14px',
+  padding: '.64em .72em .72em',
 };
 
 const aboutView : View = function aboutView(payload) {
@@ -118,9 +130,10 @@ const aboutView : View = function aboutView(payload) {
           <img src={HEADSHOT} style={profileImageStyle}/>
         </a>
       </div>
-      <div style={assign({}, aboutItemStyle, { flexGrow: 3, paddingLeft: '1.25em' })}>
+      <div style={assign({}, aboutItemStyle, { flexGrow: 3, paddingLeft: '1.25em', borderRadius: '3px' })}>
+        <div style={aboutTextHeaderStyle}> ABOUT </div>
         <div style={aboutTextStyle}>
-          middle lane
+          Some about me text.
         </div>
       </div>
     </div>
