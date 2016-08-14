@@ -36,6 +36,7 @@ interface View {
 const navBarHeight = 3;
 
 const navBarStyle = {
+  backgroundColor: 'white',
   alignItems: 'center',
   borderRadius: '2px',
   boxShadow: '0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)',
@@ -63,21 +64,65 @@ const navItemStyle = {
 };
 
 const avatarStyle = {
-  borderRadius: '100%',
+  borderRadius: '6px',
   marginRight: 'auto',
   maxHeight: '80%',
-  maxWidth: '80%'
+  maxWidth: '80%',
+  alignSelf: 'center'
 };
 
 const contentStyle = {
   position: 'absolute',
-  top: `${navBarHeight * 1.5}em`
+  width: '100%',
+  top: `${navBarHeight * 2}em`
+};
+
+const aboutContainerStyle = {
+  display: 'flex',
+  justifyContent: 'space-around',
+  width: '66.6%',
+  margin: '0 auto'
+};
+
+const aboutItemStyle = {
+  flexGrow: 1,
+  width: 0,
+};
+
+const imageLinkStyle = {
+  display: 'flex',
+  width: '100%',
+  height: '100%',
+};
+
+const profileImageLinkStyle = {
+  flex: 'auto',
+};
+
+const profileImageStyle = {
+  width: '100%',
+  borderRadius: '6px',
+  height: 'auto',
+};
+
+const aboutTextStyle = {
+  borderRadius: '3px',
+  border: '1px solid #ddd'
 };
 
 const aboutView : View = function aboutView(payload) {
   return (
-    <div>
-      about
+    <div style={aboutContainerStyle}>
+      <div style={assign({}, aboutItemStyle, { flexGrow: 1 })}>
+        <a style={profileImageLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
+          <img src={HEADSHOT} style={profileImageStyle}/>
+        </a>
+      </div>
+      <div style={assign({}, aboutItemStyle, { flexGrow: 3, paddingLeft: '1.25em' })}>
+        <div style={aboutTextStyle}>
+          middle lane
+        </div>
+      </div>
     </div>
   );
 }
@@ -102,7 +147,10 @@ const view : View = function view(payload) {
   return (
     <div>
       <div style={navBarStyle}>
-        <img src={HEADSHOT} style={avatarStyle}/>
+
+        <a style={imageLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
+          <img src={HEADSHOT} style={avatarStyle}/>
+        </a>
 
         <div style={navItemStyle}>
           <div style={linkBlockStyle} onClick={switchPage(Page.About, dispatch)}> about </div>
