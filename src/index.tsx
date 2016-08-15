@@ -7,17 +7,12 @@ import {GITHUB_LOGO, HEADSHOT} from './base64Images';
 import {assign, cloneDeep} from 'lodash';
 
 enum ActionType {
-  Increment,
   SwitchPage
 }
 
 enum Page {
   About,
   Resume
-}
-
-function increment(dispatch : Dispatch) {
-  return () => dispatch({ type: ActionType.Increment });
 }
 
 function switchPage(page : Page, dispatch : Dispatch) {
@@ -77,12 +72,16 @@ const contentStyle = {
   top: `${navBarHeight * 2}em`
 };
 
-const aboutContainerStyle = {
+const pageContainerStyle = {
   display: 'flex',
   justifyContent: 'space-around',
   width: '66.6%',
   margin: '0 auto'
 };
+
+const resumeContainerStyle = assign({}, pageContainerStyle, {
+  flexDirection: 'column'
+});
 
 const aboutItemStyle = {
   flexGrow: 1,
@@ -105,7 +104,7 @@ const profileImageStyle = {
   height: 'auto',
 };
 
-const aboutTextStyle = {
+const textBodyStyle = {
   borderRadius: '0 0 3px 3px',
   borderColor: '#ddd',
   borderStyle: 'solid',
@@ -113,7 +112,11 @@ const aboutTextStyle = {
   borderWidth: '0 1px 1px 1px',
 };
 
-const aboutTextHeaderStyle = {
+const resumeBodyStyle = assign({}, textBodyStyle, {
+  flexGrow: 1
+});
+
+const textHeaderStyle = {
   borderRadius: '3px 3px 0 0',
   border: '1px solid #ddd',
   fontWeight: 600,
@@ -124,15 +127,15 @@ const aboutTextHeaderStyle = {
 
 const aboutView : View = function aboutView(payload) {
   return (
-    <div style={aboutContainerStyle}>
+    <div style={pageContainerStyle}>
       <div style={assign({}, aboutItemStyle, { flexGrow: 1 })}>
         <a style={profileImageLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
           <img src={HEADSHOT} style={profileImageStyle}/>
         </a>
       </div>
       <div style={assign({}, aboutItemStyle, { flexGrow: 3, paddingLeft: '1.25em', borderRadius: '3px' })}>
-        <div style={aboutTextHeaderStyle}> ABOUT </div>
-        <div style={aboutTextStyle}>
+        <div style={textHeaderStyle}> ABOUT </div>
+        <div style={textBodyStyle}>
           Some about me text.
         </div>
       </div>
@@ -142,8 +145,13 @@ const aboutView : View = function aboutView(payload) {
 
 const resumeView : View = function resumeView(payload) {
   return (
-    <div>
-      resume
+    <div style={resumeContainerStyle}>
+      <div style={textHeaderStyle}>
+        RESUME
+      </div>
+      <div style={resumeBodyStyle}>
+        resume content
+      </div>
     </div>
   );
 }
@@ -187,7 +195,6 @@ const view : View = function view(payload) {
 }
 
 interface Model {
-  count: number;
   page: Page;
 }
 
@@ -210,15 +217,12 @@ interface Cases<T> {
 }
 
 const INITIAL_STATE : Model = {
-  count: 1,
-  page: Page.About
+  page: Page.Resume
 };
 
 const PersonalSite = connect((state : Model) => ({state}), (dispatch : Dispatch) => ({dispatch}))(view);
 
 const updateCases : Cases<Update> = {
-  [ActionType.Increment]: (state : Model) => assign(state, { count: state.count + 1 }),
-
   [ActionType.SwitchPage]: (state : Model, action : Action) =>
     assign(state, { page: action.payload }),
 
