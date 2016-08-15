@@ -61,8 +61,8 @@ const navItemStyle = {
 const avatarStyle = {
   borderRadius: '6px',
   marginRight: 'auto',
-  maxHeight: '60%',
-  maxWidth: '60%',
+  maxHeight: '75%',
+  maxWidth: '75%',
   alignSelf: 'center'
 };
 
@@ -90,7 +90,7 @@ const aboutItemStyle = {
 
 const imageLinkStyle = {
   display: 'flex',
-  width: '100%',
+  marginRight: 'auto',
   height: '100%',
 };
 
