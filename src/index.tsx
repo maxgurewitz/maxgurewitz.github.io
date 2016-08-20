@@ -145,7 +145,7 @@ const resumeTitleStyle = {
   fontWeight: 700
 };
 
-const jobDatesStyle = {
+const resumeDatesStyle = {
   fontSize: '85%',
   paddingBottom: '.625em',
   color: '#777'
@@ -174,12 +174,11 @@ const aboutView : View = function aboutView(payload) {
   );
 }
 
-interface SkillViewPayload {
+
+function skillSection(skillViewPayload : {
   title : string;
   items : Array<string>;
-};
-
-function skillSection(skillViewPayload : SkillViewPayload) : JSX.Element {
+}) : JSX.Element {
   const { title, items } = skillViewPayload;
 
   return (
@@ -190,6 +189,22 @@ function skillSection(skillViewPayload : SkillViewPayload) : JSX.Element {
       <div style={resumeDiscriptionStyle}>
         { items.join(', ') }
       </div>
+    </div>
+  );
+}
+
+function educationDateSection(payload : {
+    date : string;
+    title : string;
+}) : JSX.Element {
+  const { title, date } = payload;
+
+  return (
+    <div>
+      <div style={resumeTitleStyle}>
+        { title }
+      </div>
+      <div style={resumeDatesStyle}> {date} </div>
     </div>
   );
 }
@@ -209,34 +224,50 @@ const skillSections = [
   }
 ].map(skillSection);
 
-const resumeView : View = function resumeView(payload) {
+const educationSections = [
+  {
+    title: 'B.A. Reed College, Physics',
+    date: '2009-2013'
+  },
+  {
+    title: 'High School Diploma, Oakwood School',
+    date: '2005-2009'
+  }
+].map(educationDateSection);
 
-  return (
-    <div style={resumeContainerStyle}>
-      <div style={textHeaderStyle}>
-        RESUME
+const resumeViewContents = (
+  <div style={resumeContainerStyle}>
+    <div style={textHeaderStyle}>
+      RESUME
+    </div>
+    <div style={resumeBodyStyle}>
+      <div style={resumeCategoryHeaderStyle}>
+        WORK EXPERIENCE
       </div>
-      <div style={resumeBodyStyle}>
-        <div style={resumeCategoryHeaderStyle}>
-          WORK EXPERIENCE
+      <div style={resumeSectionBodyStyle}>
+        <div style={resumeTitleStyle}>Software Engineer, Wanelo</div>
+        <div style={resumeDatesStyle}>July 2014 - April 2015</div>
+        <div style={resumeDiscriptionStyle}>
+          Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo's search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Helped to build Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.
         </div>
-        <div style={resumeSectionBodyStyle}>
-          <div style={resumeTitleStyle}>Software Engineer, Wanelo</div>
-          <div style={jobDatesStyle}>July 2014 - April 2015</div>
-          <div style={resumeDiscriptionStyle}>
-            Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo's search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Helped to build Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.
-          </div>
-        </div>
-        <div style={resumeCategoryHeaderStyle}>
-          SKILLS
-        </div>
-        <div style={resumeSectionBodyStyle}>
-          {skillSections}
-        </div>
+      </div>
+      <div style={resumeCategoryHeaderStyle}>
+        SKILLS
+      </div>
+      <div style={resumeSectionBodyStyle}>
+        {skillSections}
+      </div>
+      <div style={resumeCategoryHeaderStyle}>
+        EDUCATION
+      </div>
+      <div style={resumeSectionBodyStyle}>
+        {educationSections}
       </div>
     </div>
-  );
-}
+  </div>
+);
+
+const resumeView : View = function resumeView(payload) { return resumeViewContents; }
 
 const PageViewCases : Cases<View> = {
   [Page.About]: aboutView,
