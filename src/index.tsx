@@ -141,7 +141,7 @@ const resumeSectionBodyStyle = {
   paddingTop: '.625em'
 };
 
-const jobTitleStyle = {
+const resumeTitleStyle = {
   fontWeight: 700
 };
 
@@ -151,7 +151,7 @@ const jobDatesStyle = {
   color: '#777'
 };
 
-const jobDescriptionStyle = {
+const resumeDiscriptionStyle = {
   fontSize: '85%',
   paddingBottom: '1.375em',
 };
@@ -176,7 +176,6 @@ const aboutView : View = function aboutView(payload) {
     </div>
   );
 }
-          // <div style={skillTitleStyle}>
 
 const resumeView : View = function resumeView(payload) {
   return (
@@ -189,9 +188,9 @@ const resumeView : View = function resumeView(payload) {
           WORK EXPERIENCE
         </div>
         <div style={resumeSectionBodyStyle}>
-          <div style={jobTitleStyle}>Software Engineer, Wanelo</div>
+          <div style={resumeTitleStyle}>Software Engineer, Wanelo</div>
           <div style={jobDatesStyle}>July 2014 - April 2015</div>
-          <div style={jobDescriptionStyle}>
+          <div style={resumeDiscriptionStyle}>
             Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo's search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Helped to build Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.
           </div>
         </div>
@@ -199,11 +198,23 @@ const resumeView : View = function resumeView(payload) {
           SKILLS
         </div>
         <div style={resumeSectionBodyStyle}>
-          <div style={jobTitleStyle}>
-            Languages
+          <div style={resumeTitleStyle}>
+            Primary Languages
           </div>
-          <div>
-            Javascript, Ruby, Python, Java, Scala, Mathematica
+          <div style={resumeDiscriptionStyle}>
+            Javascript (Client, Server), Ruby, HTML, CSS
+          </div>
+          <div style={resumeTitleStyle}>
+            Secondary Languages
+          </div>
+          <div style={resumeDiscriptionStyle}>
+            Python, Java, Scala, Mathematica, Matlab, Haskell, Elm
+          </div>
+          <div style={resumeTitleStyle}>
+            Databases / Datastores
+          </div>
+          <div style={resumeDiscriptionStyle}>
+            SQL (Postgres, MySQL), Elastic Search, Solr, Redis, Couchbase, MongoDB
           </div>
         </div>
       </div>
