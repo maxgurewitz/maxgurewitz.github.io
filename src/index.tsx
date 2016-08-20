@@ -178,11 +178,11 @@ const aboutView : View = function aboutView(payload) {
 function skillSection(skillViewPayload : {
   title : string;
   items : Array<string>;
-}) : JSX.Element {
+}, index : number) : JSX.Element {
   const { title, items } = skillViewPayload;
 
   return (
-    <div>
+    <div key={index}>
       <div style={resumeTitleStyle}>
         { title }
       </div>
@@ -196,11 +196,11 @@ function skillSection(skillViewPayload : {
 function educationDateSection(payload : {
     date : string;
     title : string;
-}) : JSX.Element {
+}, index : number) : JSX.Element {
   const { title, date } = payload;
 
   return (
-    <div>
+    <div key={index}>
       <div style={resumeTitleStyle}>
         { title }
       </div>
