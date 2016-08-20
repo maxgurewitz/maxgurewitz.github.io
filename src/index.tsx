@@ -48,6 +48,10 @@ const navBarStyle = {
   zIndex: 10
 };
 
+const viewStyle = {
+  lineHeight: '1.25em'
+};
+
 const linkBlockStyle = {
   color: 'black',
   fontWeight: 400,
@@ -125,6 +129,36 @@ const textHeaderStyle = {
   padding: '.64em .72em .72em',
 };
 
+const resumeCategoryHeaderStyle = {
+  borderStyle: 'solid',
+  borderWidth: '0 0 1px 0',
+  borderColor: '#e6e6e6',
+  color: '#707070',
+  paddingBottom: '.625em'
+};
+
+const resumeSectionBodyStyle = {
+  paddingTop: '.625em'
+};
+
+const jobTitleStyle = {
+  fontWeight: 700
+};
+
+const jobDatesStyle = {
+  fontSize: '85%',
+  paddingBottom: '.625em',
+  color: '#777'
+};
+
+const jobDescriptionStyle = {
+  fontSize: '85%',
+  paddingBottom: '1.375em',
+};
+
+const skillTitleStyle = {
+};
+
 const aboutView : View = function aboutView(payload) {
   return (
     <div style={pageContainerStyle}>
@@ -142,6 +176,7 @@ const aboutView : View = function aboutView(payload) {
     </div>
   );
 }
+          // <div style={skillTitleStyle}>
 
 const resumeView : View = function resumeView(payload) {
   return (
@@ -150,7 +185,27 @@ const resumeView : View = function resumeView(payload) {
         RESUME
       </div>
       <div style={resumeBodyStyle}>
-        resume content
+        <div style={resumeCategoryHeaderStyle}>
+          WORK EXPERIENCE
+        </div>
+        <div style={resumeSectionBodyStyle}>
+          <div style={jobTitleStyle}>Software Engineer, Wanelo</div>
+          <div style={jobDatesStyle}>July 2014 - April 2015</div>
+          <div style={jobDescriptionStyle}>
+            Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo's search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Helped to build Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.
+          </div>
+        </div>
+        <div style={resumeCategoryHeaderStyle}>
+          SKILLS
+        </div>
+        <div style={resumeSectionBodyStyle}>
+          <div style={jobTitleStyle}>
+            Languages
+          </div>
+          <div>
+            Javascript, Ruby, Python, Java, Scala, Mathematica
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -166,7 +221,7 @@ const view : View = function view(payload) {
   const {state, dispatch} = payload;
 
   return (
-    <div>
+    <div style={viewStyle}>
       <div style={navBarStyle}>
 
         <a style={imageLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
