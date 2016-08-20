@@ -156,9 +156,6 @@ const resumeDiscriptionStyle = {
   paddingBottom: '1.375em',
 };
 
-const skillTitleStyle = {
-};
-
 const aboutView : View = function aboutView(payload) {
   return (
     <div style={pageContainerStyle}>
@@ -177,7 +174,43 @@ const aboutView : View = function aboutView(payload) {
   );
 }
 
+interface SkillViewPayload {
+  title : string;
+  items : Array<string>;
+};
+
+function skillSection(skillViewPayload : SkillViewPayload) : JSX.Element {
+  const { title, items } = skillViewPayload;
+
+  return (
+    <div>
+      <div style={resumeTitleStyle}>
+        { title }
+      </div>
+      <div style={resumeDiscriptionStyle}>
+        { items.join(', ') }
+      </div>
+    </div>
+  );
+}
+
+const skillSections = [
+  {
+    title: 'Primary Languages',
+    items: ['Javascript (Client, Server)', 'Ruby', 'HTML', 'CSS']
+  },
+  {
+    title: 'Secondary Languages',
+    items: ['Python', 'Java', 'Scala', 'Mathematica', 'Matlab', 'Haskell', 'Elm']
+  },
+  {
+    title: 'Databases / Datastores',
+    items: ['SQL (Postgres, MySQL)', 'Elastic Search', 'Solr', 'Redis', 'Couchbase', 'MongoDB']
+  }
+].map(skillSection);
+
 const resumeView : View = function resumeView(payload) {
+
   return (
     <div style={resumeContainerStyle}>
       <div style={textHeaderStyle}>
@@ -198,24 +231,7 @@ const resumeView : View = function resumeView(payload) {
           SKILLS
         </div>
         <div style={resumeSectionBodyStyle}>
-          <div style={resumeTitleStyle}>
-            Primary Languages
-          </div>
-          <div style={resumeDiscriptionStyle}>
-            Javascript (Client, Server), Ruby, HTML, CSS
-          </div>
-          <div style={resumeTitleStyle}>
-            Secondary Languages
-          </div>
-          <div style={resumeDiscriptionStyle}>
-            Python, Java, Scala, Mathematica, Matlab, Haskell, Elm
-          </div>
-          <div style={resumeTitleStyle}>
-            Databases / Datastores
-          </div>
-          <div style={resumeDiscriptionStyle}>
-            SQL (Postgres, MySQL), Elastic Search, Solr, Redis, Couchbase, MongoDB
-          </div>
+          {skillSections}
         </div>
       </div>
     </div>
