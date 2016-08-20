@@ -263,6 +263,7 @@ const resumeViewContents = (
       <div style={resumeSectionBodyStyle}>
         {educationSections}
       </div>
+      <br/>
     </div>
   </div>
 );
@@ -275,6 +276,7 @@ const PageViewCases : Cases<View> = {
   default: aboutView
 };
 
+// FIXME: figure out why contents of navbar are moving when we change page
 const view : View = function view(payload) {
   const {state, dispatch} = payload;
 
