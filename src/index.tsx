@@ -259,7 +259,7 @@ const jobSections = [
   {
     title: 'Software Engineer, Wanelo',
     date: 'July 2014 - April 2015',
-    description: 'Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo\'s search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Helped to build Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.'
+    description: 'Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo\'s search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Played key role in architecting Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.'
   },
   {
     title: 'Software Engineer, Beats Music',
@@ -301,6 +301,21 @@ const resumeViewContents = (
       </div>
       <div style={resumeSectionBodyStyle}>
         {educationSections}
+      </div>
+      <br/>
+      <div style={resumeCategoryHeaderStyle}>
+        UNDERGRADUATE THESIS
+      </div>
+      <div style={resumeSectionBodyStyle}>
+        <div>
+          <div style={resumeTitleStyle}>
+            Multilayer Perceptrons
+          </div>
+          <div style={resumeDatesStyle}> Supervisor, Joel Franklin </div>
+          <div style={resumeDiscriptionStyle}>
+            This thesis introduces the reader to the theory which underlies multilayer perceptrons, and supervised learning.  It also includes an implementation of multilayer perceptrons in python, as well as visualizations of overtraining multilayer perceptrons in video form.
+          </div>
+        </div>
       </div>
     </div>
   </div>

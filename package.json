@@ -4,7 +4,7 @@
   "description": "Personal site implemented in typescript.",
   "main": "index.js",
   "scripts": {
-    "start": "budo dev.ts --live --open --host localhost -- -p [ tsify --noImplicitAny ] --debug",
+    "start": "budo dev.ts --dir assets --live --open --host localhost -- -p [ tsify --noImplicitAny ] --debug",
     "disc": "browserify --full-paths -p [ tsify --noImplicitAny ] --debug dev.ts | discify --open"
   },
   "repository": {
