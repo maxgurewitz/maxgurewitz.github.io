@@ -109,11 +109,12 @@ const profileImageStyle = {
 };
 
 const textBodyStyle = {
-  borderRadius: '0 0 3px 3px',
   borderColor: '#ddd',
+  borderRadius: '0 0 3px 3px',
   borderStyle: 'solid',
-  padding: '2.81em',
   borderWidth: '0 1px 1px 1px',
+  marginBottom: '2.81em',
+  padding: '2.81em 2.81em 2.185em 2.81em',
 };
 
 const resumeBodyStyle = assign({}, textBodyStyle, {
@@ -167,7 +168,7 @@ const aboutView : View = function aboutView(payload) {
       <div style={assign({}, aboutItemStyle, { flexGrow: 3, paddingLeft: '1.25em', borderRadius: '3px' })}>
         <div style={textHeaderStyle}> ABOUT </div>
         <div style={textBodyStyle}>
-          Some about me text.
+          A voracious problem solver with a mind for details. Significant experience as a backend engineer, having worked extensively with Node.js and Ruby on Rails. A background in quantitative analysis, with a passion for machine learning and data science. Relentlessly optimistic about work and the future. Studied physics, loves math. Likes to read science fiction, ski, do brazillian jiu jitsu and make art.
         </div>
       </div>
     </div>
@@ -301,7 +302,6 @@ const resumeViewContents = (
       <div style={resumeSectionBodyStyle}>
         {educationSections}
       </div>
-      <br/>
     </div>
   </div>
 );
