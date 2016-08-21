@@ -21,6 +21,9 @@ function bundleToPage(bundle) {
     <body>
       <div id="app"></div>
       <script>${bundle}</script>
+      <script>
+        app.default.render('#app');
+      </script>
     </body>
   `;
 
@@ -28,7 +31,9 @@ function bundleToPage(bundle) {
   fs.writeFileSync(bundlePath, pageContents);
 }
 
-const bundler = browserify('src/index.tsx', {});
+const bundler = browserify('src/index.tsx', {
+  standalone: 'app'
+});
 
 bundler.on('error', err => {
   console.error(err.stack);
