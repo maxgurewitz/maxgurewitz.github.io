@@ -4,8 +4,9 @@
   "description": "Personal site implemented in typescript.",
   "main": "index.js",
   "scripts": {
-    "start": "budo dev.ts --dir assets --live --open --host localhost -- -p [ tsify --noImplicitAny ] --debug",
-    "disc": "browserify --full-paths -p [ tsify --noImplicitAny ] --debug dev.ts | discify --open"
+    "disc": "browserify --full-paths -p [ tsify --noImplicitAny ] --debug dev.ts | discify --open",
+    "generate-site": "node bin/generate-site",
+    "start": "budo dev.ts --dir assets --live --open --host localhost -- -p [ tsify --noImplicitAny ] --debug"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "@types/react-redux": "^4.4.29",
     "@types/rebass": "^0.2.15",
     "budo": "^8.3.0",
+    "concat-stream": "^1.5.1",
     "disc": "^1.3.2",
     "lodash-es": "^4.14.2",
     "react": "^15.3.0",

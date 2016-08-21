@@ -4,7 +4,8 @@
   ],
  "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noImplicitAny": true,
+    "sourceMap": true
  }
 }

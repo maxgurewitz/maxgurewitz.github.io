@@ -3,7 +3,7 @@ import {render as reactRender} from 'react-dom';
 import {createStore} from 'redux';
 import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
-import {GITHUB_LOGO, HEADSHOT} from './base64Images';
+import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {assign, cloneDeep} from 'lodash';
 
 enum ActionType {
