@@ -7,6 +7,7 @@ function bundleToPage(bundle) {
   const pageContents = `
     <head>
       <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+      <title> Max Gurewitz </title>
       <style>
         body {
           font-family: 'Roboto', sans-serif;
