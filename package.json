@@ -41,6 +41,7 @@
     "rebass": "^0.3.1",
     "redux": "^3.5.2",
     "tsify": "^1.0.3",
-    "typescript": "^2.1.0-dev.20160809"
+    "typescript": "^2.1.0-dev.20160809",
+    "uglifyify": "^3.0.2"
   }
 }
