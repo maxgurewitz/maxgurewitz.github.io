@@ -174,12 +174,11 @@ const aboutView : View = function aboutView(payload) {
   );
 }
 
-
-function skillSection(skillViewPayload : {
+function skillSection(payload : {
   title : string;
   items : Array<string>;
 }, index : number) : JSX.Element {
-  const { title, items } = skillViewPayload;
+  const { title, items } = payload;
 
   return (
     <div key={index}>
@@ -188,6 +187,26 @@ function skillSection(skillViewPayload : {
       </div>
       <div style={resumeDiscriptionStyle}>
         { items.join(', ') }
+      </div>
+    </div>
+  );
+}
+
+function jobSection(payload : {
+  title : string;
+  description : string;
+  date : string;
+}, index : number) : JSX.Element {
+  const { title, date, description } = payload;
+
+  return (
+    <div key={index}>
+      <div style={resumeTitleStyle}>
+        { title }
+      </div>
+      <div style={resumeDatesStyle}> {date} </div>
+      <div style={resumeDiscriptionStyle}>
+        { description }
       </div>
     </div>
   );
@@ -235,6 +254,29 @@ const educationSections = [
   }
 ].map(educationDateSection);
 
+const jobSections = [
+  {
+    title: 'Software Engineer, Wanelo',
+    date: 'July 2014 - April 2015',
+    description: 'Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo\'s search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Helped to build Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.'
+  },
+  {
+    title: 'Software Engineer, Beats Music',
+    date: 'July 2013-- May 2014',
+    description: 'Worked primarily as a Node.js backend engineer.  This entailed the use of Couchbase and MySQL databases.  Helped to build Facebook, twitter, vindicia cashbox and att integration.  Worked with elastic search and solr search engines.  Work extended to many areas including but not limited to music library data structures, music recommendations, search, billing services, and event handling.'
+  },
+  {
+    title: 'Software Engineer, Intern, Topspin Media',
+    date: 'Summer of 2012',
+    description: 'Developed a tool for organizing and dynamically displaying customer and product metadata.  Building this tool required full stack development, using Ruby on Rails.'
+  },
+  {
+    title: 'Intern, Epitaph Records',
+    date: 'Summer of 2007',
+    description: 'Assisted the company webmaster.  Organized company records.'
+  }
+].map(jobSection);
+
 const resumeViewContents = (
   <div style={resumeContainerStyle}>
     <div style={textHeaderStyle}>
@@ -245,11 +287,7 @@ const resumeViewContents = (
         WORK EXPERIENCE
       </div>
       <div style={resumeSectionBodyStyle}>
-        <div style={resumeTitleStyle}>Software Engineer, Wanelo</div>
-        <div style={resumeDatesStyle}>July 2014 - April 2015</div>
-        <div style={resumeDiscriptionStyle}>
-          Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo's search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Helped to build Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.
-        </div>
+        {jobSections}
       </div>
       <div style={resumeCategoryHeaderStyle}>
         SKILLS
