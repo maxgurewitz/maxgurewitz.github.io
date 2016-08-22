@@ -257,6 +257,11 @@ const educationSections = [
 
 const jobSections = [
   {
+    title: 'Software Engineer, OpenTable',
+    date: 'April 2015 - Current',
+    description: 'Full stack node developer.  Primary architect of new search api for aggregating and caching internal service responses.  Developed internal library for automatically scaffolding tree of asynchronous service dependencies.  Primary maintainer of front end component for autocompletion and search submission.  Initiated AB tests responsible for creating hundreds of thousands of dollars of additional revenue per year.'
+  },
+  {
     title: 'Software Engineer, Wanelo',
     date: 'July 2014 - April 2015',
     description: 'Full stack Ruby on Rails engineer.  Played a key role in developing Wanelo\'s search engine, its transaction system, and its visual layout and design.  Client side work with Backbone.  Played key role in architecting Stripe and Shopify integration.  Utilized technologies include postgres, redis, solr, elastic search, chef etc.'
@@ -329,7 +334,6 @@ const PageViewCases : Cases<View> = {
   default: aboutView
 };
 
-// FIXME: figure out why contents of navbar are moving when we change page
 const view : View = function view(payload) {
   const {state, dispatch} = payload;
 
