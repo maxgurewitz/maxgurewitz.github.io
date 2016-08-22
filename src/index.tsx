@@ -364,6 +364,7 @@ const view : View = function view(payload) {
 
 interface Model {
   page: Page;
+  actionHistory: Array<Action>;
 }
 
 interface Action {
@@ -385,7 +386,8 @@ interface Cases<T> {
 }
 
 const INITIAL_STATE : Model = {
-  page: Page.Resume
+  page: Page.Resume,
+  actionHistory: []
 };
 
 const PersonalSite = connect((state : Model) => ({state}), (dispatch : Dispatch) => ({dispatch}))(view);
@@ -402,7 +404,9 @@ function evaluateCase<T>(type : number, cases : Cases<T>) : T {
 }
 
 function update(state : Model, action: Action) : Model {
-  return evaluateCase(action.type, updateCases)(cloneDeep(state), action);
+  const updatedState = evaluateCase(action.type, updateCases)(cloneDeep(state), action);
+  updatedState.actionHistory.push(action);
+  return updatedState;
 }
 
 export default {
