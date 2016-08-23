@@ -1,5 +1,6 @@
 const browserify = require('browserify');
 const concatStream = require('concat-stream');
+const envify = require('envify/custom');
 const fs = require('fs');
 const path = require('path');
 
@@ -44,7 +45,7 @@ bundler.on('error', err => {
 
 bundler
   .plugin('tsify', { noImplicitAny: true })
-  .transform({ NODE_ENV: 'production' }, 'envify')
+  .transform(envify({ NODE_ENV: 'production' }))
   .transform({ global: true }, 'uglifyify')
   .bundle()
   .pipe(concatStream(bundleToPage));
