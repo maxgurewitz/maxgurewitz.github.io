@@ -157,6 +157,12 @@ const resumeDiscriptionStyle = {
   paddingBottom: '1.375em',
 };
 
+const contactInfoStyle = {
+  fontSize: '85%',
+  textAlign: 'center',
+  paddingTop: '2em'
+};
+
 const aboutView : View = function aboutView(payload) {
   return (
     <div style={pageContainerStyle}>
@@ -321,6 +327,9 @@ const resumeViewContents = (
             This thesis introduces the reader to the theory which underlies multilayer perceptrons, and supervised learning.  It also includes an implementation of multilayer perceptrons in python, as well as visualizations of overtraining multilayer perceptrons in video form.
           </div>
         </div>
+      </div>
+      <div style={contactInfoStyle}>
+        maxgurewitz@gmail.com
       </div>
     </div>
   </div>
