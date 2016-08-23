@@ -160,7 +160,7 @@ const resumeDiscriptionStyle = {
 const contactInfoStyle = {
   fontSize: '85%',
   textAlign: 'center',
-  paddingTop: '2em'
+  paddingTop: '1em'
 };
 
 const aboutView : View = function aboutView(payload) {
