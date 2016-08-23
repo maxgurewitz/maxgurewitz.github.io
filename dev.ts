@@ -1,3 +1,3 @@
-import personalSite from './src/index.tsx';
+import personalSite from './src/index';
 
 personalSite.render('#app');
