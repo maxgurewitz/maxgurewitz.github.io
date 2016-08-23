@@ -44,6 +44,7 @@ bundler.on('error', err => {
 
 bundler
   .plugin('tsify', { noImplicitAny: true })
+  .transform({ NODE_ENV: 'production' }, 'envify')
   .transform({ global: true }, 'uglifyify')
   .bundle()
   .pipe(concatStream(bundleToPage));
