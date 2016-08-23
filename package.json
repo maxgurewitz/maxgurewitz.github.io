@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "disc": "browserify --full-paths -p [ tsify --noImplicitAny ] -t [ uglifyify --global ] --debug dev.ts | discify --open",
-    "generate-site": "node bin/generate-site",
+    "generate-site": "NODE_ENV=production node bin/generate-site",
     "start": "budo dev.ts --dir assets --live --open --host localhost -- -p [ tsify --noImplicitAny ] --debug"
   },
   "repository": {

@@ -31,7 +31,7 @@ function bundleToPage(bundle) {
   `;
 
   const bundlePath = path.join(__dirname, '..', 'index.html');
-  fs.writeFileSync(bundlePath, pageContents);
+  fs.writeFileSync(bundlePath, pageContents, { flag: 'w+' });
 }
 
 const bundler = browserify('src/index.tsx', {
@@ -44,8 +44,8 @@ bundler.on('error', err => {
 });
 
 bundler
-  .plugin('tsify', { noImplicitAny: true })
   .transform(envify({ NODE_ENV: 'production' }))
+  .plugin('tsify', { noImplicitAny: true })
   .transform({ global: true }, 'uglifyify')
   .bundle()
   .pipe(concatStream(bundleToPage));
