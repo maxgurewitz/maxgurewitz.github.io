@@ -84,7 +84,7 @@ const pageContainerStyle = {
   margin: '0 auto'
 };
 
-const resumeContainerStyle = assign({}, pageContainerStyle, {
+const centeredContainerStyle = assign({}, pageContainerStyle, {
   flexDirection: 'column'
 });
 
@@ -291,7 +291,7 @@ const jobSections = [
 ].map(jobSection);
 
 const resumeViewContents = (
-  <div style={resumeContainerStyle}>
+  <div style={centeredContainerStyle}>
     <div style={textHeaderStyle}>
       RESUME
     </div>
@@ -314,7 +314,6 @@ const resumeViewContents = (
       <div style={resumeSectionBodyStyle}>
         {educationSections}
       </div>
-      <br/>
       <div style={resumeCategoryHeaderStyle}>
         UNDERGRADUATE THESIS
       </div>
@@ -339,7 +338,16 @@ const resumeViewContents = (
 const resumeView : View = function resumeView(payload) { return resumeViewContents; }
 
 const analyticsView : View = function analyticsView(payload) {
-  return (<div style={pageContainerStyle}> analytics </div>);
+  return (
+    <div style={centeredContainerStyle}>
+      <div style={textHeaderStyle}>
+        ANALYTICS
+      </div>
+      <div style={textBodyStyle}>
+        analytics
+      </div>
+    </div>
+  );
 }
 
 const PageViewCases : Cases<View> = {
