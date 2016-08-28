@@ -12,6 +12,7 @@ enum ActionType {
 
 enum Page {
   About,
+  Analytics,
   Resume
 }
 
@@ -337,9 +338,14 @@ const resumeViewContents = (
 
 const resumeView : View = function resumeView(payload) { return resumeViewContents; }
 
+const analyticsView : View = function analyticsView(payload) {
+  return (<div style={pageContainerStyle}> analytics </div>);
+}
+
 const PageViewCases : Cases<View> = {
   [Page.About]: aboutView,
   [Page.Resume]: resumeView,
+  [Page.Analytics]: analyticsView,
   default: aboutView
 };
 
@@ -360,6 +366,10 @@ const view : View = function view(payload) {
 
         <div style={navItemStyle}>
           <a style={linkBlockStyle} onClick={switchPage(Page.Resume, dispatch)}> resume </a>
+        </div>
+
+        <div style={navItemStyle}>
+          <a style={linkBlockStyle} onClick={switchPage(Page.Analytics, dispatch)}> analytics </a>
         </div>
 
         <div style={navItemStyle}>
