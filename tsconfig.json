@@ -3,6 +3,7 @@
     "dev.ts"
   ],
  "compilerOptions": {
+    "outDir": "./lib/",
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "noImplicitAny": true,
