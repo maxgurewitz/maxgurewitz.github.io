@@ -114,7 +114,7 @@ const textBodyStyle = {
   borderStyle: 'solid',
   borderWidth: '0 1px 1px 1px',
   marginBottom: '2.81em',
-  padding: '2.81em 2.81em 2.185em 2.81em',
+  padding: '2.81em',
 };
 
 const resumeBodyStyle = assign({}, textBodyStyle, {
