@@ -7,7 +7,8 @@ import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {assign, cloneDeep} from 'lodash';
 
 enum ActionType {
-  SwitchPage
+  SwitchPage,
+  WindowResized
 }
 
 enum Page {
@@ -43,14 +44,20 @@ const navBarStyle = {
   left: 0,
   margin: 0,
   padding: '0 1em 0 1em',
-  position: 'fixed',
+  position: 'absolute',
   right: 0,
   top: 0,
   zIndex: 10
 };
 
 const viewStyle = {
-  lineHeight: '1.25em'
+  lineHeight: '1.25em',
+  overflowY: 'scroll',
+  overflowX: 'hidden',
+  width: '100%',
+  height: '100%',
+  right: 0,
+  top: 0,
 };
 
 const linkBlockStyle = {
@@ -72,9 +79,8 @@ const avatarStyle = {
 };
 
 const contentStyle = {
-  position: 'absolute',
   width: '100%',
-  top: `${navBarHeight * 2}em`
+  paddingTop: `${navBarHeight * 2}em`
 };
 
 const pageContainerStyle = {
@@ -127,7 +133,7 @@ const textHeaderStyle = {
   border: '1px solid #ddd',
   fontWeight: 600,
   backgroundColor: '#f5f5f5',
-  fontSize: '14px',
+  fontSize: '.875em',
   padding: '.64em .72em .72em',
 };
 
@@ -337,15 +343,31 @@ const resumeViewContents = (
 
 const resumeView : View = function resumeView(payload) { return resumeViewContents; }
 
+const emptyEl = <div/>;
+const noOpDispatch = (action : Action) => {}
+
 const analyticsView : View = function analyticsView(payload) {
+  const {state, dispatch} = payload;
+
+  // FIXME: need to account for more than one level of nesting
+  // FIXME: adjust style so that percentage is relative to index;
+  const nestedViewStyle = {
+    position: 'relative',
+    width: '33%',
+    height: '33%',
+    margin: '0 auto',
+    zIndex: 5,
+    fontSize: 16/3 + 'px',
+  };
+
+  const nestedView =
+    state.replayModel ?
+      view({state: state.replayModel, dispatch: noOpDispatch }) :
+      emptyEl;
+
   return (
-    <div style={centeredContainerStyle}>
-      <div style={textHeaderStyle}>
-        ANALYTICS
-      </div>
-      <div style={textBodyStyle}>
-        analytics
-      </div>
+    <div style={nestedViewStyle}>
+      {nestedView}
     </div>
   );
 }
@@ -396,6 +418,9 @@ const view : View = function view(payload) {
 interface Model {
   page: Page;
   actionHistory: Array<Action>;
+  replayModel: Model;
+  windowHeight: number;
+  windowWidth: number;
 }
 
 interface Action {
@@ -416,18 +441,48 @@ interface Cases<T> {
   default : T
 }
 
-const INITIAL_STATE : Model = {
-  page: Page.Resume,
-  actionHistory: []
-};
+function initializeState(payload : {
+  windowHeight: number;
+  windowWidth: number;
+}) : Model {
+  const {windowWidth, windowHeight} = payload;
 
-const PersonalSite = connect((state : Model) => ({state}), (dispatch : Dispatch) => ({dispatch}))(view);
+  return {
+    page: Page.Resume,
+    actionHistory: [],
+    replayModel: null,
+    windowWidth,
+    windowHeight
+  };
+}
+
+const PersonalSite = connect((state : Model) =>
+  ({state}), (dispatch : Dispatch) => ({dispatch}))(view);
+
+const noOpUpdate : Update = (state : Model) => state;
+
+const pageCases : Cases<Update> = {
+  [Page.Analytics]: (state : Model) =>
+    assign(
+      state,
+      {
+        replayModel: initializeState({
+          windowWidth: state.windowWidth,
+          windowHeight: state.windowWidth
+        })
+      }
+  ),
+
+  default: noOpUpdate
+}
 
 const updateCases : Cases<Update> = {
-  [ActionType.SwitchPage]: (state : Model, action : Action) =>
-    assign(state, { page: action.payload }),
+  [ActionType.SwitchPage]: (state : Model, action : Action) => {
+    const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
+    return assign(withPageUpdate, { page: action.payload });
+  },
 
-  default: (state : Model) => state
+  default: noOpUpdate
 };
 
 function evaluateCase<T>(type : number, cases : Cases<T>) : T {
@@ -440,9 +495,44 @@ function update(state : Model, action: Action) : Model {
   return updatedState;
 }
 
+interface Subscription {
+  (dispatch : Dispatch) : void;
+}
+
+interface WindowTarget extends EventTarget {
+  innerHeight: number;
+  innerWidth: number;
+}
+
+interface ResizeEvent extends UIEvent {
+  target: WindowTarget;
+}
+
+const windowSize : Subscription = function windowSize(dispatch) {
+  window.onresize = (e : ResizeEvent) =>
+    dispatch({
+      type: ActionType.WindowResized,
+      payload: {
+        height: e.target.innerHeight,
+        width: e.target.innerWidth
+      }
+    });
+};
+
 export default {
   render(selector: string) {
-    const store = createStore(update, INITIAL_STATE);
+    const initialState = initializeState({
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight
+    });
+
+    const store = createStore(update, initialState);
+
+    const subscriptions : Array<Subscription> = [windowSize];
+
+    subscriptions.forEach(subscription =>
+      subscription(store.dispatch.bind(store))
+    );
 
     const app = (
       <Provider store = {store}>
