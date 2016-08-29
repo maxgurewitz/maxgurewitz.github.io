@@ -35,8 +35,8 @@ const navBarHeight = 3;
 const navBarStyle = {
   backgroundColor: 'white',
   alignItems: 'center',
-  borderRadius: '2px',
-  boxShadow: '0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)',
+  borderRadius: '.125em',
+  boxShadow: '0 .5em 1em 0 rgba(0,0,0,0.2),0 .375em 1.25em 0 rgba(0,0,0,0.19)',
   color: 'white',
   display: 'flex',
   height: `${navBarHeight}em`,
