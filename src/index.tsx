@@ -71,7 +71,7 @@ const navItemStyle = {
 };
 
 const avatarStyle = {
-  borderRadius: '6px',
+  borderRadius: '.375em',
   marginRight: 'auto',
   maxHeight: '75%',
   maxWidth: '75%',
@@ -111,13 +111,13 @@ const profileImageLinkStyle = {
 
 const profileImageStyle = {
   width: '100%',
-  borderRadius: '6px',
+  borderRadius: '.375em',
   height: 'auto',
 };
 
 const textBodyStyle = {
   borderColor: '#ddd',
-  borderRadius: '0 0 3px 3px',
+  borderRadius: '0 0 .19em .19em',
   borderStyle: 'solid',
   borderWidth: '0 1px 1px 1px',
   marginBottom: '2.81em',
@@ -129,7 +129,7 @@ const resumeBodyStyle = assign({}, textBodyStyle, {
 });
 
 const textHeaderStyle = {
-  borderRadius: '3px 3px 0 0',
+  borderRadius: '.19em .19em 0 0',
   border: '1px solid #ddd',
   fontWeight: 600,
   backgroundColor: '#f5f5f5',
