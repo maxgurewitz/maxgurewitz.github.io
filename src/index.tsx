@@ -4,7 +4,7 @@ import {createStore} from 'redux';
 import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
-import {assign, cloneDeep} from 'lodash';
+import {merge, cloneDeep} from 'lodash';
 
 /*
 outline:
@@ -40,6 +40,10 @@ interface ViewPayload {
   dispatch : Dispatch
 }
 
+interface ViewUpdate {
+  (view : ViewModel, action : Action): ViewModel
+}
+
 */
 
 enum ActionType {
@@ -57,7 +61,13 @@ function switchPage(page : Page, dispatch : Dispatch) {
   return () => dispatch({ type: ActionType.SwitchPage, payload: page });
 }
 
+interface ViewConfig {
+  viewDepth: number,
+  currentView: number
+}
+
 interface ViewPayload {
+  config : ViewConfig,
   state : State,
   dispatch : Dispatch
 }
@@ -126,7 +136,7 @@ const pageContainerStyle = {
   margin: '0 auto'
 };
 
-const centeredContainerStyle = assign({}, pageContainerStyle, {
+const centeredContainerStyle = merge({}, pageContainerStyle, {
   flexDirection: 'column'
 });
 
@@ -160,7 +170,7 @@ const textBodyStyle = {
   padding: '2.81em',
 };
 
-const resumeBodyStyle = assign({}, textBodyStyle, {
+const resumeBodyStyle = merge({}, textBodyStyle, {
   flexGrow: 1
 });
 
@@ -209,12 +219,12 @@ const contactInfoStyle = {
 const aboutView : View = function aboutView(payload) {
   return (
     <div style={pageContainerStyle}>
-      <div style={assign({}, aboutItemStyle, { flexGrow: 1 })}>
+      <div style={merge({}, aboutItemStyle, { flexGrow: 1 })}>
         <a style={profileImageLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
           <img src={HEADSHOT} style={profileImageStyle}/>
         </a>
       </div>
-      <div style={assign({}, aboutItemStyle, { flexGrow: 3, paddingLeft: '1.25em', borderRadius: '3px' })}>
+      <div style={merge({}, aboutItemStyle, { flexGrow: 3, paddingLeft: '1.25em', borderRadius: '3px' })}>
         <div style={textHeaderStyle}> ABOUT </div>
         <div style={textBodyStyle}>
           A voracious problem solver with a mind for details. Significant experience as a backend engineer, having worked extensively with Node.js and Ruby on Rails. A background in quantitative analysis, with a passion for machine learning and data science. Relentlessly optimistic about work and the future. Studied physics, loves math. Likes to read science fiction, ski, do brazillian jiu jitsu and make art.
@@ -379,11 +389,14 @@ const resumeViewContents = (
 
 const resumeView : View = function resumeView(payload) { return resumeViewContents; }
 
-const emptyEl = <div/>;
+const emptyEl = "";
 const noOpDispatch = (action : Action) => {}
 
+const maxViewDepth = 20;
+
 const analyticsView : View = function analyticsView(payload) {
-  const {state, dispatch} = payload;
+  const {state, config} = payload;
+  const viewModel = getViewModel(payload);
 
   // FIXME: need to account for more than one level of nesting
   // FIXME: adjust style so that percentage is relative to index;
@@ -397,8 +410,15 @@ const analyticsView : View = function analyticsView(payload) {
   };
 
   const nestedView =
-    state.replayModel ?
-      view({state: state.replayModel, dispatch: noOpDispatch }) :
+    config.viewDepth < maxViewDepth ?
+      view({
+        config: {
+          viewDepth: config.viewDepth + 1,
+          currentView: viewModel.replayViewIndex
+        },
+        dispatch: noOpDispatch,
+        state
+      }) :
       emptyEl;
 
   return (
@@ -416,8 +436,8 @@ const PageViewCases : Cases<View> = {
 };
 
 function getViewModel(payload : ViewPayload) : ViewModel {
-  // FIXME: should use payload config
-  return payload.state.views[0];
+  const {state, config} = payload;
+  return state.views[config.currentView];
 }
 
 const view : View = function view(payload) {
@@ -458,14 +478,14 @@ const view : View = function view(payload) {
 }
 
 interface ViewModel {
-  page: Page;
-  windowHeight: number;
-  windowWidth: number;
-  replayViewIndex: number;
+  page: Page,
+  windowHeight: number,
+  windowWidth: number,
+  replayViewIndex: number
 }
 
 interface State {
-  baseView: number;
+  baseView: number,
   views: {
     [index: number]: ViewModel;
   },
@@ -475,7 +495,7 @@ interface State {
   replayActionIndexes: {
     [index: number]: number
   },
-  replayModel: State;
+  replayModel: State
 }
 
 interface Action {
@@ -522,8 +542,21 @@ function initializeState(payload : {
   };
 }
 
+const initialView : View = function initalView(payload) {
+  const initialConfig = {
+    viewDepth: 0,
+    currentView: payload.state.baseView
+  };
+
+  return view({
+    dispatch: payload.dispatch,
+    state: payload.state,
+    config: initialConfig
+  });
+}
+
 const PersonalSite = connect((state : State) =>
-  ({state}), (dispatch : Dispatch) => ({dispatch}))(view);
+  ({state}), (dispatch : Dispatch) => ({dispatch}))(initialView);
 
 const noOpUpdate : Update = (state : State) => state;
 
@@ -531,10 +564,20 @@ const pageCases : Cases<Update> = {
   default: noOpUpdate
 }
 
+interface ViewUpdate {
+  (view : ViewModel, action : Action): ViewModel
+}
+
 const updateCases : Cases<Update> = {
   [ActionType.SwitchPage]: (state : State, action : Action) => {
     const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
-    return assign(withPageUpdate, { page: action.payload });
+    return merge(withPageUpdate, {
+      views: {
+        [state.baseView]: {
+          page: action.payload
+        }
+      }
+    });
   },
 
   default: noOpUpdate
