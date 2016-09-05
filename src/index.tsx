@@ -461,6 +461,9 @@ interface ViewModel {
 interface State {
   baseView: number;
   page: Page;
+  views: {
+    [index: number]: ViewModel;
+  }
   actionHistory: Array<Action>;
   replayModel: State;
   windowHeight: number;
@@ -496,6 +499,14 @@ function initializeState(payload : {
     page: Page.Resume,
     actionHistory: [],
     replayModel: null,
+    views: {
+      0: {
+        windowWidth,
+        windowHeight,
+        replayViewIndex: 0,
+        page: Page.Resume
+      }
+    },
     windowWidth,
     windowHeight
   };
