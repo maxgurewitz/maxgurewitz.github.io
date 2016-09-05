@@ -24,7 +24,7 @@ interface State {
   actions: {
     [index: number]: Array<Action>
   },
-  actionIndexes: {
+  replayActionIndexes: {
     [index: number]: number
   }
 }
@@ -472,6 +472,9 @@ interface State {
   actions: {
     [index: number]: Array<Action>;
   },
+  replayActionIndexes: {
+    [index: number]: number
+  },
   replayModel: State;
 }
 
@@ -512,6 +515,9 @@ function initializeState(payload : {
         replayViewIndex: 0,
         page: Page.Resume
       }
+    },
+    replayActionIndexes: {
+      0: 0
     }
   };
 }
