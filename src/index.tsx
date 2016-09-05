@@ -392,21 +392,25 @@ const resumeView : View = function resumeView(payload) { return resumeViewConten
 const emptyEl = "";
 const noOpDispatch = (action : Action) => {}
 
-const maxViewDepth = 20;
+// FIXME: make relative to window size
+const maxViewDepth = 5;
+const nestingFactor = 3;
 
 const analyticsView : View = function analyticsView(payload) {
   const {state, config} = payload;
   const viewModel = getViewModel(payload);
 
-  // FIXME: need to account for more than one level of nesting
-  // FIXME: adjust style so that percentage is relative to index;
+  const nestingDepth = nestingFactor * config.viewDepth;
+  const sizePercentage = (100/nestingDepth)+'%';
+
+  // FIXME: use state.windowHeight and state.windowWidth
   const nestedViewStyle = {
     position: 'relative',
-    width: '33%',
-    height: '33%',
+    width: sizePercentage,
+    height: sizePercentage,
     margin: '0 auto',
     zIndex: 5,
-    fontSize: 16/3 + 'px',
+    fontSize: 16/nestingDepth + 'px',
   };
 
   const nestedView =
@@ -544,7 +548,7 @@ function initializeState(payload : {
 
 const initialView : View = function initalView(payload) {
   const initialConfig = {
-    viewDepth: 0,
+    viewDepth: 1,
     currentView: payload.state.baseView
   };
 
