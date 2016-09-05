@@ -16,7 +16,7 @@ interface ViewModel {
   page: Page
 }
 
-interface Model {
+interface State {
   baseView: number,
   views: {
     [index: number]: viewModel
@@ -35,7 +35,7 @@ interface ViewConfig {
 }
 
 interface ViewPayload {
-  state : Model,
+  state : State,
   config : ViewConfig,
   dispatch : Dispatch
 }
@@ -58,7 +58,7 @@ function switchPage(page : Page, dispatch : Dispatch) {
 }
 
 interface ViewPayload {
-  state : Model,
+  state : State,
   dispatch : Dispatch
 }
 
@@ -451,10 +451,10 @@ const view : View = function view(payload) {
   );
 }
 
-interface Model {
+interface State {
   page: Page;
   actionHistory: Array<Action>;
-  replayModel: Model;
+  replayModel: State;
   windowHeight: number;
   windowWidth: number;
 }
@@ -469,7 +469,7 @@ interface Dispatch {
 }
 
 interface Update {
-  (state : Model, action : Action) : Model;
+  (state : State, action : Action) : State;
 }
 
 interface Cases<T> {
@@ -480,7 +480,7 @@ interface Cases<T> {
 function initializeState(payload : {
   windowHeight: number;
   windowWidth: number;
-}) : Model {
+}) : State {
   const {windowWidth, windowHeight} = payload;
 
   return {
@@ -492,13 +492,13 @@ function initializeState(payload : {
   };
 }
 
-const PersonalSite = connect((state : Model) =>
+const PersonalSite = connect((state : State) =>
   ({state}), (dispatch : Dispatch) => ({dispatch}))(view);
 
-const noOpUpdate : Update = (state : Model) => state;
+const noOpUpdate : Update = (state : State) => state;
 
 const pageCases : Cases<Update> = {
-  [Page.Analytics]: (state : Model) =>
+  [Page.Analytics]: (state : State) =>
     assign(
       state,
       {
@@ -513,7 +513,7 @@ const pageCases : Cases<Update> = {
 }
 
 const updateCases : Cases<Update> = {
-  [ActionType.SwitchPage]: (state : Model, action : Action) => {
+  [ActionType.SwitchPage]: (state : State, action : Action) => {
     const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
     return assign(withPageUpdate, { page: action.payload });
   },
@@ -525,7 +525,7 @@ function evaluateCase<T>(type : number, cases : Cases<T>) : T {
   return cases[type] || cases.default;
 }
 
-function update(state : Model, action: Action) : Model {
+function update(state : State, action: Action) : State {
   const updatedState = evaluateCase(action.type, updateCases)(cloneDeep(state), action);
   updatedState.actionHistory.push(action);
   return updatedState;
