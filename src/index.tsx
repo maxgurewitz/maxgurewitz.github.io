@@ -112,7 +112,6 @@ const linkBlockStyle = {
   textDecoration: 'none'
 };
 
-// FIXME:
 const navItemStyle = {
   padding: '0 .5em 0 .5em',
 };
@@ -394,14 +393,12 @@ const emptyEl = "";
 const noOpDispatch = (action : Action) => {}
 
 // FIXME: make relative to window size
-const maxViewDepth = 5;
-const nestingFactor = 3;
+const maxViewDepth = 10;
+const nestingFactor = 2;
 
 const analyticsView : View = function analyticsView(payload) {
   const {state, config} = payload;
   const viewModel = getViewModel(payload);
-
-  const nestingDepth = nestingFactor * config.viewDepth;
   const sizePercentage = (100/nestingFactor)+'%';
 
   // FIXME: use state.windowHeight and state.windowWidth
@@ -411,7 +408,7 @@ const analyticsView : View = function analyticsView(payload) {
     height: sizePercentage,
     margin: '0 auto',
     zIndex: 5,
-    fontSize: 16/nestingDepth + 'px',
+    fontSize: 16/Math.pow(nestingFactor, config.viewDepth) + 'px',
   };
 
   const nestedView =
