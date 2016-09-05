@@ -392,7 +392,6 @@ const resumeView : View = function resumeView(payload) { return resumeViewConten
 const emptyEl = "";
 const noOpDispatch = (action : Action) => {}
 
-// FIXME: make relative to window size
 const maxViewDepth = 10;
 const nestingFactor = 2;
 
@@ -402,6 +401,7 @@ const analyticsView : View = function analyticsView(payload) {
   const sizePercentage = (100/nestingFactor)+'%';
 
   // FIXME: use state.windowHeight and state.windowWidth
+  // FIXME: style width of scrollbar
   const nestedViewStyle = {
     position: 'relative',
     width: sizePercentage,
