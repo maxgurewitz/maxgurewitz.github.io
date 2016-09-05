@@ -12,6 +12,7 @@ brainstorm:
 interface ViewModel {
   windowHeight: number,
   windowWidth: number,
+  replayViewIndex: number,
   page: Page
 }
 
@@ -27,6 +28,18 @@ interface Model {
     [index: number]: number
   }
 }
+
+interface ViewConfig {
+  viewDepth: number,
+  currentView: number
+}
+
+interface ViewPayload {
+  state : Model,
+  config : ViewConfig,
+  dispatch : Dispatch
+}
+
 */
 
 enum ActionType {
