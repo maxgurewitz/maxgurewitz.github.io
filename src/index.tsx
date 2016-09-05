@@ -451,6 +451,13 @@ const view : View = function view(payload) {
   );
 }
 
+interface ViewModel {
+  page: Page;
+  windowHeight: number;
+  windowWidth: number;
+  replayViewIndex: number;
+}
+
 interface State {
   baseView: number;
   page: Page;
