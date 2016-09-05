@@ -7,7 +7,7 @@ import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {assign, cloneDeep} from 'lodash';
 
 /*
-brainstorm:
+outline:
 
 interface ViewModel {
   windowHeight: number,
@@ -415,8 +415,14 @@ const PageViewCases : Cases<View> = {
   default: aboutView
 };
 
+function getViewModel(payload : ViewPayload) : ViewModel {
+  // FIXME: should use payload config
+  return payload.state.views[0];
+}
+
 const view : View = function view(payload) {
-  const {state, dispatch} = payload;
+  const {dispatch} = payload;
+  const viewModel = getViewModel(payload);
 
   return (
     <div style={viewStyle}>
@@ -445,7 +451,7 @@ const view : View = function view(payload) {
         </div>
       </div>
       <div style={contentStyle}>
-        {evaluateCase(state.page, PageViewCases)(payload)}
+        {evaluateCase(viewModel.page, PageViewCases)(payload)}
       </div>
     </div>
   );
@@ -460,14 +466,11 @@ interface ViewModel {
 
 interface State {
   baseView: number;
-  page: Page;
   views: {
     [index: number]: ViewModel;
   }
   actionHistory: Array<Action>;
   replayModel: State;
-  windowHeight: number;
-  windowWidth: number;
 }
 
 interface Action {
@@ -496,7 +499,6 @@ function initializeState(payload : {
 
   return {
     baseView: 0,
-    page: Page.Resume,
     actionHistory: [],
     replayModel: null,
     views: {
@@ -506,9 +508,7 @@ function initializeState(payload : {
         replayViewIndex: 0,
         page: Page.Resume
       }
-    },
-    windowWidth,
-    windowHeight
+    }
   };
 }
 
@@ -518,17 +518,6 @@ const PersonalSite = connect((state : State) =>
 const noOpUpdate : Update = (state : State) => state;
 
 const pageCases : Cases<Update> = {
-  [Page.Analytics]: (state : State) =>
-    assign(
-      state,
-      {
-        replayModel: initializeState({
-          windowWidth: state.windowWidth,
-          windowHeight: state.windowWidth
-        })
-      }
-  ),
-
   default: noOpUpdate
 }
 
