@@ -112,6 +112,7 @@ const linkBlockStyle = {
   textDecoration: 'none'
 };
 
+// FIXME:
 const navItemStyle = {
   padding: '0 .5em 0 .5em',
 };
@@ -401,7 +402,7 @@ const analyticsView : View = function analyticsView(payload) {
   const viewModel = getViewModel(payload);
 
   const nestingDepth = nestingFactor * config.viewDepth;
-  const sizePercentage = (100/nestingDepth)+'%';
+  const sizePercentage = (100/nestingFactor)+'%';
 
   // FIXME: use state.windowHeight and state.windowWidth
   const nestedViewStyle = {
@@ -426,7 +427,7 @@ const analyticsView : View = function analyticsView(payload) {
       emptyEl;
 
   return (
-    <div style={nestedViewStyle}>
+    <div id="nestedViewContainer" style={nestedViewStyle}>
       {nestedView}
     </div>
   );
