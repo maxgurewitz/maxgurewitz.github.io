@@ -452,6 +452,7 @@ const view : View = function view(payload) {
 }
 
 interface State {
+  baseView: number;
   page: Page;
   actionHistory: Array<Action>;
   replayModel: State;
@@ -484,6 +485,7 @@ function initializeState(payload : {
   const {windowWidth, windowHeight} = payload;
 
   return {
+    baseView: 0,
     page: Page.Resume,
     actionHistory: [],
     replayModel: null,
