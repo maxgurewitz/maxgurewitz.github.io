@@ -6,6 +6,29 @@ import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {assign, cloneDeep} from 'lodash';
 
+/*
+brainstorm:
+
+interface ViewModel {
+  windowHeight: number,
+  windowWidth: number,
+  page: Page
+}
+
+interface Model {
+  baseView: number,
+  views: {
+    [index: number]: viewModel
+  },
+  actions: {
+    [index: number]: Array<Action>
+  },
+  actionIndexes: {
+    [index: number]: number
+  }
+}
+*/
+
 enum ActionType {
   SwitchPage,
   WindowResized
