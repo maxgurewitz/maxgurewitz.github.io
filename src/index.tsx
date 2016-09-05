@@ -468,8 +468,10 @@ interface State {
   baseView: number;
   views: {
     [index: number]: ViewModel;
-  }
-  actionHistory: Array<Action>;
+  },
+  actions: {
+    [index: number]: Array<Action>;
+  },
   replayModel: State;
 }
 
@@ -499,7 +501,9 @@ function initializeState(payload : {
 
   return {
     baseView: 0,
-    actionHistory: [],
+    actions: {
+      0: []
+    },
     replayModel: null,
     views: {
       0: {
@@ -536,7 +540,7 @@ function evaluateCase<T>(type : number, cases : Cases<T>) : T {
 
 function update(state : State, action: Action) : State {
   const updatedState = evaluateCase(action.type, updateCases)(cloneDeep(state), action);
-  updatedState.actionHistory.push(action);
+  updatedState.actions[updatedState.baseView].push(action);
   return updatedState;
 }
 
