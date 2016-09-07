@@ -19,6 +19,16 @@ function bundleToPage(bundle) {
         div {
           box-sizing: border-box;
         }
+
+        .base-view::-webkit-scrollbar {
+          width: 1em;
+          height: 1em;
+        }
+
+        .base-view::-webkit-scrollbar-thumb {
+          background-color: darkgrey;
+          outline: 1px solid slategrey;
+        }
       </style>
     </head>
     <body>
@@ -49,4 +59,3 @@ bundler
   .transform({ global: true }, 'uglifyify')
   .bundle()
   .pipe(concatStream(bundleToPage));
-

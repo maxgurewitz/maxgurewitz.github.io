@@ -496,8 +496,7 @@ interface State {
   },
   replayActionIndexes: {
     [index: number]: number
-  },
-  replayModel: State
+  }
 }
 
 interface Action {
@@ -529,7 +528,6 @@ function initializeState(payload : {
     actions: {
       0: []
     },
-    replayModel: null,
     views: {
       0: {
         windowWidth,
