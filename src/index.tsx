@@ -447,7 +447,7 @@ const view : View = function view(payload) {
   const viewModel = getViewModel(payload);
 
   return (
-    <div style={viewStyle}>
+    <div className="base-view" style={viewStyle}>
       <div style={navBarStyle}>
 
         <a style={imageLinkStyle} href="https://github.com/maxgurewitz" target="_blank">

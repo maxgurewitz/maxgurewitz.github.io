@@ -2,11 +2,16 @@
   "files": [
     "dev.ts"
   ],
- "compilerOptions": {
+  "filesGlob": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts"
+  ],
+  "compilerOptions": {
     "outDir": "./lib/",
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "noImplicitAny": true,
     "sourceMap": true
- }
+  }
 }
