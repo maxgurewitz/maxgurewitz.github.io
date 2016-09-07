@@ -105,10 +105,13 @@ const aboutItemStyle = {
   width: 0,
 };
 
-const imageLinkStyle = {
+const githubLinkStyle = {
+  padding: '0 .5em 0 .5em',
   display: 'flex',
   marginRight: 'auto',
-  height: '100%',
+  color: 'black',
+  fontWeight: 400,
+  textDecoration: 'none'
 };
 
 const profileImageLinkStyle = {
@@ -305,7 +308,7 @@ const jobSections = [
 const resumeViewContents = (
   <div style={centeredContainerStyle}>
     <div style={textHeaderStyle}>
-      RESUME
+      RESUME:
     </div>
     <div style={resumeBodyStyle}>
       <div style={resumeCategoryHeaderStyle}>
@@ -410,8 +413,8 @@ const view : View = function view(payload) {
     <div className="base-view" style={viewStyle}>
       <div style={navBarStyle}>
 
-        <a style={imageLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
-          <img src={HEADSHOT} style={avatarStyle}/>
+        <a style={githubLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
+          github
         </a>
 
         <div style={navItemStyle}>
