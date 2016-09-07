@@ -358,6 +358,7 @@ const noOpDispatch = (action : Action) => {}
 
 const maxViewDepth = 10;
 const nestingFactor = 2;
+const baseFontSize = 16;
 
 const analyticsView : View = function analyticsView(payload) {
   const {state, config} = payload;
@@ -365,14 +366,14 @@ const analyticsView : View = function analyticsView(payload) {
   const sizePercentage = (100/nestingFactor)+'%';
 
   // FIXME: use state.windowHeight and state.windowWidth
-  // FIXME: style width of scrollbar
   const nestedViewStyle = {
     position: 'relative',
     width: sizePercentage,
     height: sizePercentage,
     margin: '0 auto',
     zIndex: 5,
-    fontSize: 16/Math.pow(nestingFactor, config.viewDepth) + 'px',
+    border: '1px solid #ddd',
+    fontSize: baseFontSize/Math.pow(nestingFactor, config.viewDepth) + 'px',
   };
 
   const nestedView =
