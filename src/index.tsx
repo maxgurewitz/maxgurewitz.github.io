@@ -6,46 +6,6 @@ import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {merge, cloneDeep} from 'lodash';
 
-/*
-outline:
-
-interface ViewModel {
-  windowHeight: number,
-  windowWidth: number,
-  replayViewIndex: number,
-  page: Page
-}
-
-interface State {
-  baseView: number,
-  views: {
-    [index: number]: viewModel
-  },
-  actions: {
-    [index: number]: Array<Action>
-  },
-  replayActionIndexes: {
-    [index: number]: number
-  }
-}
-
-interface ViewConfig {
-  viewDepth: number,
-  currentView: number
-}
-
-interface ViewPayload {
-  state : State,
-  config : ViewConfig,
-  dispatch : Dispatch
-}
-
-interface ViewUpdate {
-  (view : ViewModel, action : Action): ViewModel
-}
-
-*/
-
 enum ActionType {
   SwitchPage,
   WindowResized
