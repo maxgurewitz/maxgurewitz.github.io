@@ -8,6 +8,7 @@ import {merge, cloneDeep} from 'lodash';
 
 enum ActionType {
   SwitchPage,
+  MouseUp,
   WindowResized
 }
 
@@ -580,6 +581,10 @@ const windowSize : Subscription = function windowSize(dispatch) {
     });
 };
 
+const mouseUps : Subscription = function mouseUps(dispatch) {
+  window.onmouseup = () => dispatch({ type: ActionType.MouseUp });
+};
+
 export default {
   render(selector: string) {
     const initialState = initializeState({
@@ -589,7 +594,7 @@ export default {
 
     const store = createStore(update, initialState);
 
-    const subscriptions : Array<Subscription> = [windowSize];
+    const subscriptions : Array<Subscription> = [windowSize, mouseUps];
 
     subscriptions.forEach(subscription =>
       subscription(store.dispatch.bind(store))
