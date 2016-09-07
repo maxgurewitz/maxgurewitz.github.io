@@ -359,11 +359,16 @@ const noOpDispatch = (action : Action) => {}
 const maxViewDepth = 10;
 const nestingFactor = 2;
 const baseFontSize = 16;
+const sizePercentage = (100/nestingFactor)+'%';
+
+const rangeStyle = {
+  width: '100%',
+  height: '1em'
+};
 
 const analyticsView : View = function analyticsView(payload) {
   const {state, config} = payload;
   const viewModel = getViewModel(payload);
-  const sizePercentage = (100/nestingFactor)+'%';
 
   // FIXME: use state.windowHeight and state.windowWidth
   const nestedViewStyle = {
@@ -388,9 +393,20 @@ const analyticsView : View = function analyticsView(payload) {
       }) :
       emptyEl;
 
+  const replayId = `replay-${config.viewDepth}`;
+  const actionsLength = state.actions[viewModel.replayViewIndex].length;
+
+  // FIXME: syncronize input via value attribute
   return (
     <div id="nestedViewContainer" style={nestedViewStyle}>
       {nestedView}
+      <label htmlFor={replayId}>Replay: </label>
+      <input
+        style={rangeStyle}
+        type="range"
+        min="0"
+        max={actionsLength}
+        id={replayId} />
     </div>
   );
 }
