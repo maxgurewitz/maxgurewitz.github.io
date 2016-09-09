@@ -5,6 +5,30 @@ import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {merge, cloneDeep} from 'lodash';
+/*
+brainstorm:
+
+type ViewId = number;
+
+interface State {
+  baseView: ViewIndex,
+  initialViews: {
+    [viewerIndex: ViewId]
+  },
+  views: {
+    [viewerIndex: ViewId]: {
+      [viewedIndex: ViewId]: {
+        actionIndex: index,
+        updatedView: ViewModel
+      }
+    }
+  },
+  actions: {
+    [index: number]: Array<Action>;
+  },
+}
+
+*/
 
 enum ActionType {
   SwitchPage,
