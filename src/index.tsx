@@ -400,7 +400,6 @@ const analyticsView : View = function analyticsView(payload) {
     fontSize: baseFontSize/Math.pow(nestingFactor, config.viewDepth) + 'px',
   };
 
-
   const sliderContainerStyle = {
     width: sizePercentage,
     height: '2em',
@@ -446,7 +445,7 @@ const PageViewCases : Cases<View> = {
 
 function getViewModel(payload : ViewPayload) : ViewModel {
   const {state, config} = payload;
-  return state.views[config.currentView];
+  return state.initialViews[config.currentView];
 }
 
 const view : View = function view(payload) {
@@ -495,7 +494,7 @@ interface ViewModel {
 
 interface State {
   baseView: number,
-  views: {
+  initialViews: {
     [index: number]: ViewModel;
   },
   actions: {
@@ -535,7 +534,7 @@ function initializeState(payload : {
     actions: {
       0: []
     },
-    views: {
+    initialViews: {
       0: {
         windowWidth,
         windowHeight,
