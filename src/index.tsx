@@ -385,11 +385,6 @@ const nestingFactor = 2;
 const baseFontSize = 16;
 const sizePercentage = (100/nestingFactor)+'%';
 
-const rangeStyle = {
-  width: '100%',
-  height: '1em'
-};
-
 const analyticsView : View = function analyticsView(payload) {
   const {state, config} = payload;
   const viewModel = getViewModel(payload);
@@ -405,6 +400,16 @@ const analyticsView : View = function analyticsView(payload) {
     fontSize: baseFontSize/Math.pow(nestingFactor, config.viewDepth) + 'px',
   };
 
+
+  const sliderContainerStyle = {
+    width: sizePercentage,
+    height: '2em',
+    borderStyle: 'solid',
+    borderColor: '#ddd',
+    margin: '0 auto',
+    borderWidth: '0 1px 1px 1px'
+  };
+
   const nestedView =
     config.viewDepth < maxViewDepth ?
       view({
@@ -417,20 +422,17 @@ const analyticsView : View = function analyticsView(payload) {
       }) :
       emptyEl;
 
-  const replayId = `replay-${config.viewDepth}`;
   const actionsLength = state.actions[viewModel.replayViewIndex].length;
 
   // FIXME: syncronize input via value attribute
   return (
-    <div id="nestedViewContainer" style={nestedViewStyle}>
-      {nestedView}
-      <label htmlFor={replayId}>Replay: </label>
-      <input
-        style={rangeStyle}
-        type="range"
-        min="0"
-        max={actionsLength}
-        id={replayId} />
+    <div>
+      <div id="nestedViewContainer" style={nestedViewStyle}>
+        {nestedView}
+      </div>
+      <div style={sliderContainerStyle}>
+        slider container
+      </div>
     </div>
   );
 }
