@@ -5,29 +5,74 @@ import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {merge, cloneDeep} from 'lodash';
+import uuid from 'uuid';
+
 /*
 brainstorm:
 
-type ViewId = number;
+interface ViewModel {
+  page: Page,
+  windowHeight: number,
+  windowWidth: number,
+  childViewIndex: string
+}
 
 interface State {
   baseView: ViewIndex,
+  baseViewIndex: string,
+  baseNodeIndex: string,
   initialViews: {
-    [viewerIndex: ViewId]
+    [viewIndex: string]
   },
-  views: {
-    [viewerIndex: ViewId]: {
-      [viewedIndex: ViewId]: {
-        actionIndex: index,
-        updatedView: ViewModel
-      }
-    }
+  viewTree: {
+    [nodeIndex: string]: ViewNode
   },
   actions: {
-    [index: number]: Array<Action>;
+    [actionIndex: number]: Array<Action>
   },
 }
 
+interface ViewNode {
+  actionIndex: number,
+  updatedView: ViewModel,
+  childNodeIndex: number,
+}
+
+
+function createViewTree(state) {
+  return _.reduce(_.range(maxViewDepth), (i, memo) => {
+    const guid = Guid.raw();
+    const initialView = state.initialViews[memo.viewIndex];
+
+    memo.nodes[memo.nodeIndex] = {
+      actionIndex: 0,
+      updatedView: initialView,
+      initialViewIndex: memo.viewIndex,
+      childNodeIndex: guid
+    };
+
+    memo.nodeIndex = guid;
+    memo.viewIndex = initialView.childViewIndex
+
+    return memo;
+  }, {
+    nodeIndex: state.baseNodeIndex,
+    viewIndex: state.baseViewIndex,
+    nodes: {}
+  }).nodes;
+}
+
+const viewUpdateCases : Cases<ViewUpdateCases> = {
+  [ActionType.SwitchPage]: (view : ViewModel, viewAction : viewAction) => {},
+
+  default: noOpViewUpdate
+};
+
+const updateCases : Cases<Update> = {
+  [ActionType.ViewUpdate]: (state : State, action : Action) => {},
+
+  default: noOpUpdate
+};
 */
 
 enum ActionType {
@@ -500,8 +545,13 @@ interface State {
   actions: {
     [index: number]: Array<Action>;
   },
-  replayActionIndexes: {
-    [index: number]: number
+  views: {
+    [viewerIndex: number]: {
+      [viewedIndex: number]: {
+        actionIndex: number,
+        updatedView: ViewModel
+      }
+    }
   }
 }
 
@@ -529,21 +579,28 @@ function initializeState(payload : {
 }) : State {
   const {windowWidth, windowHeight} = payload;
 
+  const baseViewContent = {
+    windowWidth,
+    windowHeight,
+    replayViewIndex: 0,
+    page: Page.Resume
+  };
+
   return {
     baseView: 0,
     actions: {
       0: []
     },
     initialViews: {
-      0: {
-        windowWidth,
-        windowHeight,
-        replayViewIndex: 0,
-        page: Page.Resume
-      }
+      0: baseViewContent
     },
-    replayActionIndexes: {
-      0: 0
+    views: {
+      0: {
+        0: {
+          actionIndex: 0,
+          updatedView: baseViewContent
+        }
+      }
     }
   };
 }
