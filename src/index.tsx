@@ -646,7 +646,9 @@ const updateCases : Cases<Update> = {
     return merge(withPageUpdate, {
       viewTree: {
         [state.baseViewNodeIndex]: {
-          page: action.payload
+          updatedView: {
+            page: action.payload
+          }
         }
       }
     });
