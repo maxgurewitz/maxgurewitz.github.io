@@ -5,7 +5,7 @@ import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {merge, cloneDeep} from 'lodash';
-import uuid from 'uuid';
+import {v4 as uuid} from 'node-uuid';
 
 /*
 brainstorm:
@@ -93,7 +93,7 @@ function switchPage(page : Page, dispatch : Dispatch) {
 
 interface ViewConfig {
   viewDepth: number,
-  currentView: number
+  currentView: string
 }
 
 interface ViewPayload {
@@ -433,6 +433,7 @@ const sizePercentage = (100/nestingFactor)+'%';
 const analyticsView : View = function analyticsView(payload) {
   const {state, config} = payload;
   const viewModel = getViewModel(payload);
+  const viewNode = getViewNode(payload);
 
   // FIXME: use state.windowHeight and state.windowWidth
   const nestedViewStyle = {
@@ -455,18 +456,16 @@ const analyticsView : View = function analyticsView(payload) {
   };
 
   const nestedView =
-    config.viewDepth < maxViewDepth ?
+    viewNode.childNodeIndex ?
       view({
         config: {
           viewDepth: config.viewDepth + 1,
-          currentView: viewModel.replayViewIndex
+          currentView: viewNode.childNodeIndex
         },
         dispatch: noOpDispatch,
         state
       }) :
       emptyEl;
-
-  const actionsLength = state.actions[viewModel.replayViewIndex].length;
 
   // FIXME: syncronize input via value attribute
   return (
@@ -491,6 +490,11 @@ const PageViewCases : Cases<View> = {
 function getViewModel(payload : ViewPayload) : ViewModel {
   const {state, config} = payload;
   return state.initialViews[config.currentView];
+}
+
+function getViewNode(payload : ViewPayload) : ViewNode {
+  const {state, config} = payload;
+  return state.viewTree[config.currentView];
 }
 
 const view : View = function view(payload) {
@@ -534,25 +538,27 @@ interface ViewModel {
   page: Page,
   windowHeight: number,
   windowWidth: number,
-  replayViewIndex: number
+  childViewIndex: string
 }
 
 interface State {
-  baseView: number,
+  baseInitialViewIndex: string,
+  baseViewNodeIndex: string,
   initialViews: {
-    [index: number]: ViewModel;
+    [initialViewIndex: string]: ViewModel
+  },
+  viewTree: {
+    [nodeIndex: string]: ViewNode
   },
   actions: {
-    [index: number]: Array<Action>;
+    [initialViewIndex: string]: Array<Action>
   },
-  views: {
-    [viewerIndex: number]: {
-      [viewedIndex: number]: {
-        actionIndex: number,
-        updatedView: ViewModel
-      }
-    }
-  }
+}
+
+interface ViewNode {
+  actionIndex: number,
+  updatedView: ViewModel,
+  childNodeIndex: string,
 }
 
 interface Action {
@@ -578,29 +584,33 @@ function initializeState(payload : {
   windowWidth: number;
 }) : State {
   const {windowWidth, windowHeight} = payload;
+  const baseViewNodeIndex = uuid();
+  const baseInitialViewIndex = uuid();
 
-  const baseViewContent = {
+  const baseViewModel = {
     windowWidth,
     windowHeight,
-    replayViewIndex: 0,
+    childViewIndex: baseViewNodeIndex,
     page: Page.Resume
   };
 
+  const baseViewNode : ViewNode = {
+    actionIndex: 0,
+    updatedView: baseViewModel,
+    childNodeIndex: null
+  };
+
   return {
-    baseView: 0,
+    baseViewNodeIndex,
+    baseInitialViewIndex,
     actions: {
-      0: []
+      [baseInitialViewIndex]: []
     },
     initialViews: {
-      0: baseViewContent
+      [baseInitialViewIndex]: baseViewModel
     },
-    views: {
-      0: {
-        0: {
-          actionIndex: 0,
-          updatedView: baseViewContent
-        }
-      }
+    viewTree: {
+      [baseViewNodeIndex]: baseViewNode
     }
   };
 }
@@ -608,7 +618,7 @@ function initializeState(payload : {
 const initialView : View = function initalView(payload) {
   const initialConfig = {
     viewDepth: 1,
-    currentView: payload.state.baseView
+    currentView: payload.state.baseViewNodeIndex
   };
 
   return view({
@@ -635,8 +645,8 @@ const updateCases : Cases<Update> = {
   [ActionType.SwitchPage]: (state : State, action : Action) => {
     const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
     return merge(withPageUpdate, {
-      views: {
-        [state.baseView]: {
+      viewTree: {
+        [state.baseViewNodeIndex]: {
           page: action.payload
         }
       }
@@ -652,7 +662,7 @@ function evaluateCase<T>(type : number, cases : Cases<T>) : T {
 
 function update(state : State, action: Action) : State {
   const updatedState = evaluateCase(action.type, updateCases)(cloneDeep(state), action);
-  updatedState.actions[updatedState.baseView].push(action);
+  updatedState.actions[updatedState.baseViewNodeIndex].push(action);
   return updatedState;
 }
 
