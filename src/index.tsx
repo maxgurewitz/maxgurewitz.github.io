@@ -593,6 +593,7 @@ function initializeState(payload : {
     page: Page.Resume
   };
 
+  // FIXME: create view tree
   const baseViewNode : ViewNode = {
     actionIndex: 0,
     updatedView: baseViewModel,
@@ -640,6 +641,7 @@ interface ViewUpdate {
   (view : ViewModel, action : Action): ViewModel
 }
 
+// FIXME: allow for child updates
 const updateCases : Cases<Update> = {
   [ActionType.SwitchPage]: (state : State, action : Action) => {
     const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
