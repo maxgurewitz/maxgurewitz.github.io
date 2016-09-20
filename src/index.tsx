@@ -488,8 +488,7 @@ const PageViewCases : Cases<View> = {
 };
 
 function getViewModel(payload : ViewPayload) : ViewModel {
-  const {state, config} = payload;
-  return state.initialViews[config.currentView];
+  return getViewNode(payload).updatedView;
 }
 
 function getViewNode(payload : ViewPayload) : ViewNode {
@@ -662,7 +661,7 @@ function evaluateCase<T>(type : number, cases : Cases<T>) : T {
 
 function update(state : State, action: Action) : State {
   const updatedState = evaluateCase(action.type, updateCases)(cloneDeep(state), action);
-  updatedState.actions[updatedState.baseViewNodeIndex].push(action);
+  updatedState.actions[updatedState.baseInitialViewIndex].push(action);
   return updatedState;
 }
 
