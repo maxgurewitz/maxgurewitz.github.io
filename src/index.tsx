@@ -4,7 +4,7 @@ import {createStore} from 'redux';
 import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
-import {merge, cloneDeep} from 'lodash';
+import {times, merge, cloneDeep, fromPairs} from 'lodash';
 import {v4 as uuid} from 'node-uuid';
 
 /*
@@ -488,7 +488,8 @@ const PageViewCases : Cases<View> = {
 };
 
 function getViewModel(payload : ViewPayload) : ViewModel {
-  return getViewNode(payload).updatedView;
+  const viewNode = getViewNode(payload);
+  return viewNode ? viewNode.updatedView : null;
 }
 
 function getViewNode(payload : ViewPayload) : ViewNode {
@@ -536,8 +537,7 @@ const view : View = function view(payload) {
 interface ViewModel {
   page: Page,
   windowHeight: number,
-  windowWidth: number,
-  childViewIndex: string
+  windowWidth: number
 }
 
 interface State {
@@ -583,15 +583,33 @@ function initializeState(payload : {
   windowWidth: number;
 }) : State {
   const {windowWidth, windowHeight} = payload;
-  const baseViewNodeIndex = uuid();
   const baseInitialViewIndex = uuid();
 
   const baseViewModel = {
     windowWidth,
     windowHeight,
-    childViewIndex: baseViewNodeIndex,
     page: Page.Resume
   };
+
+  const baseInitialView = {
+    windowHeight,
+    windowWidth,
+    page: Page.Resume
+  };
+
+  const uuids = times(maxViewDepth - 1, () => uuid());
+  const viewTree = fromPairs(
+    uuids.map((uuid, i) => (
+      [uuid,
+        {
+          actionIndex: 0,
+          childNodeIndex: uuids[i + 1] || null,
+          updatedView: baseInitialView
+        }
+      ]
+    ))
+  );
+
 
   // FIXME: create view tree
   const baseViewNode : ViewNode = {
@@ -601,7 +619,7 @@ function initializeState(payload : {
   };
 
   return {
-    baseViewNodeIndex,
+    baseViewNodeIndex: uuids[0],
     baseInitialViewIndex,
     actions: {
       [baseInitialViewIndex]: []
@@ -609,9 +627,7 @@ function initializeState(payload : {
     initialViews: {
       [baseInitialViewIndex]: baseViewModel
     },
-    viewTree: {
-      [baseViewNodeIndex]: baseViewNode
-    }
+    viewTree
   };
 }
 
