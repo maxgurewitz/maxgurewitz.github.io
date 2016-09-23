@@ -616,7 +616,11 @@ const initialView : View = function initalView(payload) {
 const PersonalSite = connect((state : State) =>
   ({state}), (dispatch : Dispatch) => ({dispatch}))(initialView);
 
-const noOpUpdate : Update = (state : State) => state;
+function identity<T>(arg: T): T {
+    return arg;
+}
+
+const noOpUpdate = identity;
 
 const pageCases : Cases<Update> = {
   default: noOpUpdate
@@ -642,6 +646,14 @@ const updateCases : Cases<Update> = {
 
   default: noOpUpdate
 };
+
+const viewUpdateCases : Cases<ViewUpdate> = {
+  default: noOpUpdate
+};
+
+function updateViewNode(index: string, state : State, action : Action) : State {
+  return state;
+}
 
 function evaluateCase<T>(type : number, cases : Cases<T>) : T {
   return cases[type] || cases.default;
