@@ -7,77 +7,9 @@ import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {times, merge, cloneDeep, fromPairs} from 'lodash';
 import {v4 as uuid} from 'node-uuid';
 
-/*
-brainstorm:
-
-interface ViewModel {
-  page: Page,
-  windowHeight: number,
-  windowWidth: number,
-  childViewIndex: string
-}
-
-interface State {
-  baseView: ViewIndex,
-  baseViewIndex: string,
-  baseNodeIndex: string,
-  initialViews: {
-    [viewIndex: string]
-  },
-  viewTree: {
-    [nodeIndex: string]: ViewNode
-  },
-  actions: {
-    [actionIndex: number]: Array<Action>
-  },
-}
-
-interface ViewNode {
-  actionIndex: number,
-  updatedView: ViewModel,
-  childNodeIndex: number,
-}
-
-
-function createViewTree(state) {
-  return _.reduce(_.range(maxViewDepth), (i, memo) => {
-    const guid = Guid.raw();
-    const initialView = state.initialViews[memo.viewIndex];
-
-    memo.nodes[memo.nodeIndex] = {
-      actionIndex: 0,
-      updatedView: initialView,
-      initialViewIndex: memo.viewIndex,
-      childNodeIndex: guid
-    };
-
-    memo.nodeIndex = guid;
-    memo.viewIndex = initialView.childViewIndex
-
-    return memo;
-  }, {
-    nodeIndex: state.baseNodeIndex,
-    viewIndex: state.baseViewIndex,
-    nodes: {}
-  }).nodes;
-}
-
-const viewUpdateCases : Cases<ViewUpdateCases> = {
-  [ActionType.SwitchPage]: (view : ViewModel, viewAction : viewAction) => {},
-
-  default: noOpViewUpdate
-};
-
-const updateCases : Cases<Update> = {
-  [ActionType.ViewUpdate]: (state : State, action : Action) => {},
-
-  default: noOpUpdate
-};
-*/
-
 enum ActionType {
   SwitchPage,
-  MouseUp,
+  IncrementChild,
   WindowResized
 }
 
@@ -430,8 +362,33 @@ const nestingFactor = 2;
 const baseFontSize = 16;
 const sizePercentage = (100/nestingFactor)+'%';
 
+const previousActionButtonStyle = {
+  float: 'left',
+  width: '5%',
+  textAlign: 'center',
+  display: 'inline-block'
+};
+const nextActionButtonStyle = {
+  float: 'right',
+  width: '5%',
+  textAlign: 'center',
+  display: 'inline-block'
+};
+
+function incrementChild({
+  dispatch,
+  value,
+  childNodeIndex
+} : {
+  dispatch: Dispatch,
+  value: number,
+  childNodeIndex: string
+}) {
+  return () => dispatch({ type: ActionType.IncrementChild, payload: value });
+}
+
 const analyticsView : View = function analyticsView(payload) {
-  const {state, config} = payload;
+  const {state, config, dispatch} = payload;
   const viewModel = getViewModel(payload);
   const viewNode = getViewNode(payload);
 
@@ -467,14 +424,34 @@ const analyticsView : View = function analyticsView(payload) {
       }) :
       emptyEl;
 
-  // FIXME: syncronize input via value attribute
+  const decrement = incrementChild({
+    dispatch,
+    value: -1,
+    childNodeIndex: viewNode.childNodeIndex
+  });
+
+  const increment = incrementChild({
+    dispatch,
+    value: 1,
+    childNodeIndex: viewNode.childNodeIndex
+  });
+
   return (
     <div>
       <div id="nestedViewContainer" style={nestedViewStyle}>
         {nestedView}
       </div>
       <div style={sliderContainerStyle}>
-        slider container
+          <div
+            style={previousActionButtonStyle}
+            onClick={decrement}>
+            -
+          </div>
+          <div
+            style={nextActionButtonStyle}
+            onClick={increment}>
+            +
+          </div>
       </div>
     </div>
   );
@@ -610,14 +587,6 @@ function initializeState(payload : {
     ))
   );
 
-
-  // FIXME: create view tree
-  const baseViewNode : ViewNode = {
-    actionIndex: 0,
-    updatedView: baseViewModel,
-    childNodeIndex: null
-  };
-
   return {
     baseViewNodeIndex: uuids[0],
     baseInitialViewIndex,
@@ -657,7 +626,6 @@ interface ViewUpdate {
   (view : ViewModel, action : Action): ViewModel
 }
 
-// FIXME: allow for child updates
 const updateCases : Cases<Update> = {
   [ActionType.SwitchPage]: (state : State, action : Action) => {
     const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
@@ -709,10 +677,6 @@ const windowSize : Subscription = function windowSize(dispatch) {
     });
 };
 
-const mouseUps : Subscription = function mouseUps(dispatch) {
-  window.onmouseup = () => dispatch({ type: ActionType.MouseUp });
-};
-
 export default {
   render(selector: string) {
     const initialState = initializeState({
@@ -722,7 +686,7 @@ export default {
 
     const store = createStore(update, initialState);
 
-    const subscriptions : Array<Subscription> = [windowSize, mouseUps];
+    const subscriptions : Array<Subscription> = [windowSize];
 
     subscriptions.forEach(subscription =>
       subscription(store.dispatch.bind(store))
