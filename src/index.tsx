@@ -48,7 +48,6 @@ const navBarStyle = {
   color: 'white',
   display: 'flex',
   height: `${navBarHeight}em`,
-  justifyContent: 'flex-end',
   left: 0,
   margin: 0,
   padding: '0 1em 0 1em',
@@ -89,11 +88,10 @@ const avatarStyle = {
 const contentStyle = {
   width: '100%',
   paddingTop: `${navBarHeight * 2}em`
-};
+} ;
 
 const pageContainerStyle = {
   display: 'flex',
-  justifyContent: 'space-around',
   width: '66.6%',
   margin: '0 auto'
 };
