@@ -4,7 +4,7 @@ import {createStore} from 'redux';
 import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
-import {times, merge, cloneDeep, fromPairs} from 'lodash';
+import {map, times, merge, cloneDeep, fromPairs} from 'lodash';
 import {v4 as uuid} from 'node-uuid';
 
 enum ActionType {
@@ -20,7 +20,7 @@ enum Page {
 }
 
 function switchPage(page : Page, dispatch : Dispatch) {
-  return () => dispatch({ type: ActionType.SwitchPage, payload: page });
+  return () => dispatch({ type: ActionType.SwitchPage, payload: { page } });
 }
 
 interface ViewConfig {
@@ -382,7 +382,7 @@ function incrementChild({
   value: number,
   childNodeIndex: string
 }) {
-  return () => dispatch({ type: ActionType.IncrementChild, payload: value });
+  return () => dispatch({ type: ActionType.IncrementChild, payload: { childNodeIndex, value } });
 }
 
 const analyticsView : View = function analyticsView(payload) {
@@ -512,6 +512,7 @@ const view : View = function view(payload) {
 interface ViewModel {
   page: Page,
   windowHeight: number,
+  initialViewIndex: string,
   windowWidth: number
 }
 
@@ -560,15 +561,10 @@ function initializeState(payload : {
   const {windowWidth, windowHeight} = payload;
   const baseInitialViewIndex = uuid();
 
-  const baseViewModel = {
-    windowWidth,
-    windowHeight,
-    page: Page.Resume
-  };
-
   const baseInitialView = {
     windowHeight,
     windowWidth,
+    initialViewIndex: baseInitialViewIndex,
     page: Page.Resume
   };
 
@@ -577,9 +573,9 @@ function initializeState(payload : {
     uuids.map((uuid, i) => (
       [uuid,
         {
-          actionIndex: 0,
+          actionIndex: 1,
           childNodeIndex: uuids[i + 1] || null,
-          updatedView: baseInitialView
+          updatedView: cloneDeep(baseInitialView)
         }
       ]
     ))
@@ -592,7 +588,7 @@ function initializeState(payload : {
       [baseInitialViewIndex]: []
     },
     initialViews: {
-      [baseInitialViewIndex]: baseViewModel
+      [baseInitialViewIndex]: baseInitialView
     },
     viewTree
   };
@@ -628,24 +624,29 @@ interface ViewUpdate {
   (view : ViewModel, action : Action): ViewModel
 }
 
-const updateCases : Cases<Update> = {
-  [ActionType.SwitchPage]: (state : State, action : Action) => {
-    const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
-    return merge(withPageUpdate, {
-      viewTree: {
-        [state.baseViewNodeIndex]: {
-          updatedView: {
-            page: action.payload
-          }
-        }
-      }
-    });
-  },
-
+const viewUpdateCases : Cases<ViewUpdate> = {
   default: noOpUpdate
 };
 
-const viewUpdateCases : Cases<ViewUpdate> = {
+const updateCases : Cases<Update> = {
+  [ActionType.SwitchPage]: (state : State, action : Action) => {
+    const {viewNodeIndex, page} = action.payload;
+    const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
+    const nodeIndex = viewNodeIndex || state.baseViewNodeIndex;
+    withPageUpdate.viewTree[nodeIndex].updatedView.page = page;
+    return withPageUpdate;
+  },
+
+  [ActionType.IncrementChild]: (state : State, action : Action) => {
+    const {childNodeIndex, value} = action.payload;
+    const viewNode = state.viewTree[childNodeIndex];
+    const {initialViewIndex} = viewNode.updatedView;
+    const childAction = cloneDeep(state.actions[initialViewIndex][viewNode.actionIndex]);
+    childAction.payload.viewNodeIndex = childNodeIndex;
+    viewNode.actionIndex = viewNode.actionIndex + value;
+    return update(state, childAction);
+  },
+
   default: noOpUpdate
 };
 
