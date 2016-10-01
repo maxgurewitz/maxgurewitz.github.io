@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {render as reactRender} from 'react-dom';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
@@ -537,8 +537,9 @@ interface ViewNode {
 }
 
 interface Action {
-  type: ActionType;
-  payload?: any;
+  type: ActionType,
+  dateTime?: string,
+  payload?: any
 }
 
 interface Dispatch {
@@ -689,6 +690,13 @@ const windowSize : Subscription = function windowSize(dispatch) {
     });
 };
 
+function actionDateTime() {
+  return (next : Dispatch) => (action : Action) => {
+    action.dateTime = new Date().toISOString();
+    next(action);
+  }
+}
+
 export default {
   render(selector: string) {
     const initialState = initializeState({
@@ -696,7 +704,7 @@ export default {
       windowHeight: window.innerHeight
     });
 
-    const store = createStore(update, initialState);
+    const store = createStore(update, initialState, applyMiddleware(actionDateTime));
 
     const subscriptions : Array<Subscription> = [windowSize];
 
