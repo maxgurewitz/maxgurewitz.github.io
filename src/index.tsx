@@ -643,6 +643,7 @@ const updateCases : Cases<Update> = {
     const {initialViewIndex} = viewNode.updatedView;
     const childAction = cloneDeep(state.actions[initialViewIndex][viewNode.actionIndex]);
     childAction.payload.viewNodeIndex = childNodeIndex;
+    childAction.payload.childNodeIndex = viewNode.childNodeIndex;
     viewNode.actionIndex = viewNode.actionIndex + value;
     return update(state, childAction);
   },
