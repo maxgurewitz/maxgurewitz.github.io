@@ -629,6 +629,16 @@ const viewUpdateCases : Cases<ViewUpdate> = {
   default: noOpUpdate
 };
 
+const update : Update = function update(state, action) {
+  const clonedState = cloneDeep(state);
+  clonedState.actions[clonedState.baseInitialViewIndex].push(action);
+  return updateCase(clonedState, action);
+}
+
+const updateCase : Update = function updateCase(state, action) {
+  return evaluateCase(action.type, updateCases)(state, action);
+}
+
 const updateCases : Cases<Update> = {
   [ActionType.SwitchPage]: (state : State, action : Action) => {
     const {viewNodeIndex, page} = action.payload;
@@ -641,29 +651,24 @@ const updateCases : Cases<Update> = {
   [ActionType.IncrementChild]: (state : State, action : Action) => {
     const {childNodeIndex, value} = action.payload;
     const viewNode = state.viewTree[childNodeIndex];
+
+    if (!viewNode || viewNode.actionIndex === 0) {
+      return state;
+    }
+
     const {initialViewIndex} = viewNode.updatedView;
     const childAction = cloneDeep(state.actions[initialViewIndex][viewNode.actionIndex]);
     childAction.payload.viewNodeIndex = childNodeIndex;
     childAction.payload.childNodeIndex = viewNode.childNodeIndex;
     viewNode.actionIndex = viewNode.actionIndex + value;
-    return update(state, childAction);
+    return updateCase(state, childAction);
   },
 
   default: noOpUpdate
 };
 
-function updateViewNode(index: string, state : State, action : Action) : State {
-  return state;
-}
-
 function evaluateCase<T>(type : number, cases : Cases<T>) : T {
   return cases[type] || cases.default;
-}
-
-function update(state : State, action: Action) : State {
-  const updatedState = evaluateCase(action.type, updateCases)(cloneDeep(state), action);
-  updatedState.actions[updatedState.baseInitialViewIndex].push(action);
-  return updatedState;
 }
 
 interface Subscription {
