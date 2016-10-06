@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {render as reactRender} from 'react-dom';
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, MiddlewareAPI} from 'redux';
 import {connect, Provider} from 'react-redux';
 import {Avatar, LinkBlock} from 'rebass';
 import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
@@ -10,6 +10,7 @@ import {v4 as uuid} from 'node-uuid';
 enum ActionType {
   SwitchPage,
   IncrementChild,
+  StartReplay,
   WindowResized
 }
 
@@ -367,10 +368,9 @@ const previousActionButtonStyle = {
   display: 'inline-block'
 };
 const nextActionButtonStyle = {
-  float: 'right',
+  margin: '0 auto',
   width: '5%',
-  textAlign: 'center',
-  display: 'inline-block'
+  textAlign: 'center'
 };
 
 function incrementChild({
@@ -383,6 +383,10 @@ function incrementChild({
   childNodeIndex: string
 }) {
   return () => dispatch({ type: ActionType.IncrementChild, payload: { childNodeIndex, value } });
+}
+
+function startReplay(dispatch : Dispatch) {
+  return () => dispatch({ type: ActionType.StartReplay });
 }
 
 const analyticsView : View = function analyticsView(payload) {
@@ -422,18 +426,6 @@ const analyticsView : View = function analyticsView(payload) {
       }) :
       emptyEl;
 
-  const decrement = incrementChild({
-    dispatch,
-    value: -1,
-    childNodeIndex: viewNode.childNodeIndex
-  });
-
-  const increment = incrementChild({
-    dispatch,
-    value: 1,
-    childNodeIndex: viewNode.childNodeIndex
-  });
-
   return (
     <div>
       <div id="nestedViewContainer" style={nestedViewStyle}>
@@ -441,14 +433,9 @@ const analyticsView : View = function analyticsView(payload) {
       </div>
       <div style={sliderContainerStyle}>
           <div
-            style={previousActionButtonStyle}
-            onClick={decrement}>
-            -
-          </div>
-          <div
             style={nextActionButtonStyle}
-            onClick={increment}>
-            +
+            onClick={startReplay(dispatch)}>
+            play
           </div>
       </div>
     </div>
@@ -648,6 +635,10 @@ const updateCases : Cases<Update> = {
     return withPageUpdate;
   },
 
+  [ActionType.StartReplay]: (state : State, action : Action) => {
+      return state;
+  },
+
   [ActionType.IncrementChild]: (state : State, action : Action) => {
     const {childNodeIndex, value} = action.payload;
     const viewNode = state.viewTree[childNodeIndex];
@@ -702,6 +693,28 @@ function actionDateTime() {
   }
 }
 
+interface GetState {
+  (): State;
+}
+
+interface EffectManager {
+  (payload : {action : Action, state : State, dispatch : Dispatch}) : void;
+}
+
+const effectManagerCases : Cases<EffectManager> = {
+  [ActionType.StartReplay]: ({action, dispatch, state}) => {
+  },
+  default: ({action, dispatch}) => dispatch(action)
+};
+
+function effectManagers({dispatch, getState} : MiddlewareAPI<State>) {
+  return (dispatch : Dispatch) => (action : Action) => {
+    const state = getState();
+    const effectManager = evaluateCase(action.type, effectManagerCases);
+    effectManager({dispatch, action, state});
+  }
+}
+
 export default {
   render(selector: string) {
     const initialState = initializeState({
@@ -709,7 +722,7 @@ export default {
       windowHeight: window.innerHeight
     });
 
-    const store = createStore(update, initialState, applyMiddleware(actionDateTime));
+    const store = createStore(update, initialState, applyMiddleware(actionDateTime, effectManagers));
 
     const subscriptions : Array<Subscription> = [windowSize];
 
