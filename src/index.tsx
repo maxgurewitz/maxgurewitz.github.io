@@ -7,9 +7,11 @@ import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {map, times, merge, cloneDeep, fromPairs} from 'lodash';
 import {v4 as uuid} from 'node-uuid';
 
+// FIXME: seperate types for actions and cmds
 enum ActionType {
   SwitchPage,
   IncrementChild,
+  UpdateReplay,
   StartReplay,
   WindowResized
 }
@@ -505,6 +507,7 @@ interface ViewModel {
 
 interface State {
   baseInitialViewIndex: string,
+  isPlaying: boolean,
   baseViewNodeIndex: string,
   initialViews: {
     [initialViewIndex: string]: ViewModel
@@ -557,6 +560,7 @@ function initializeState(payload : {
   };
 
   const uuids = times(maxViewDepth - 1, () => uuid());
+
   const viewTree = fromPairs(
     uuids.map((uuid, i) => (
       [uuid,
@@ -571,6 +575,7 @@ function initializeState(payload : {
 
   return {
     baseViewNodeIndex: uuids[0],
+    isPlaying: false,
     baseInitialViewIndex,
     actions: {
       [baseInitialViewIndex]: []
@@ -635,10 +640,6 @@ const updateCases : Cases<Update> = {
     return withPageUpdate;
   },
 
-  [ActionType.StartReplay]: (state : State, action : Action) => {
-      return state;
-  },
-
   [ActionType.IncrementChild]: (state : State, action : Action) => {
     const {childNodeIndex, value} = action.payload;
     const viewNode = state.viewTree[childNodeIndex];
@@ -653,6 +654,11 @@ const updateCases : Cases<Update> = {
     childAction.payload.childNodeIndex = viewNode.childNodeIndex;
     viewNode.actionIndex = viewNode.actionIndex + value;
     return updateCase(state, childAction);
+  },
+
+  [ActionType.UpdateReplay]: (state : State, action : Action) => {
+    state.isPlaying = action.payload;
+    return state;
   },
 
   default: noOpUpdate
@@ -698,11 +704,40 @@ interface GetState {
 }
 
 interface EffectManager {
-  (payload : {action : Action, state : State, dispatch : Dispatch}) : void;
+  (payload : {action : Action, getState : GetState, dispatch : Dispatch}) : void;
+}
+
+const playLoop : EffectManager = function playLoop({action, dispatch, getState}) {
+  console.log('loc1');
+  const state = getState();
+  const baseViewNode = state.viewTree[state.baseViewNodeIndex];
+  const childViewNode = state.viewTree[baseViewNode.childNodeIndex];
+  const childActions = state.actions[childViewNode.updatedView.initialViewIndex];
+  const isLastAction = childViewNode.actionIndex === childActions.length;
+
+  dispatch({ type: ActionType.IncrementChild, payload: { childNodeIndex: baseViewNode.childNodeIndex, value: 1 } });
+
+  if (isLastAction) {
+    dispatch({ type: ActionType.UpdateReplay, payload: false });
+  } else if (state.isPlaying) {
+    const currentAction = childActions[childViewNode.actionIndex];
+    const nextAction = childActions[childViewNode.actionIndex + 1];
+    const timeToWait = nextAction.dateTime - currentAction.dateTime;
+
+    console.log('loc2', timeToWait);
+    // console.log('loc3', nextAction.dateTime, currentAction.dateTime);
+    console.log('loc3', nextAction, currentAction);
+    // FIXME: IncrementChild actions don't have dateTime's because they're created in this middleware.  should probably skip them?
+    setTimeout(() => {
+      playLoop({action, dispatch, getState});
+    }, timeToWait);
+  }
 }
 
 const effectManagerCases : Cases<EffectManager> = {
-  [ActionType.StartReplay]: ({action, dispatch, state}) => {
+  [ActionType.StartReplay]: ({action, dispatch, getState}) => {
+    dispatch({ type: ActionType.UpdateReplay, payload: true });
+    playLoop({action, dispatch, getState});
   },
   default: ({action, dispatch}) => dispatch(action)
 };
@@ -711,7 +746,7 @@ function effectManagers({dispatch, getState} : MiddlewareAPI<State>) {
   return (dispatch : Dispatch) => (action : Action) => {
     const state = getState();
     const effectManager = evaluateCase(action.type, effectManagerCases);
-    effectManager({dispatch, action, state});
+    effectManager({dispatch, action, getState});
   }
 }
 
