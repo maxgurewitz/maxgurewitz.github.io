@@ -525,7 +525,7 @@ interface ViewNode {
 
 interface Action {
   type: ActionType,
-  dateTime?: string,
+  dateTime?: number,
   payload?: any
 }
 
@@ -688,7 +688,7 @@ const windowSize : Subscription = function windowSize(dispatch) {
 
 function actionDateTime() {
   return (next : Dispatch) => (action : Action) => {
-    action.dateTime = new Date().toISOString();
+    action.dateTime = Date.now();
     next(action);
   }
 }
