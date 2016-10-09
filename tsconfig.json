@@ -8,6 +8,7 @@
     "src/**/*.d.ts"
   ],
   "compilerOptions": {
+    "strictNullChecks": true,
     "outDir": "./lib/",
     "allowSyntheticDefaultImports": true,
     "jsx": "react",

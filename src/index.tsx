@@ -452,8 +452,7 @@ const PageViewCases : Cases<View> = {
 };
 
 function getViewModel(payload : ViewPayload) : ViewModel {
-  const viewNode = getViewNode(payload);
-  return viewNode ? viewNode.updatedView : null;
+  return getViewNode(payload).updatedView;
 }
 
 function getViewNode(payload : ViewPayload) : ViewNode {
