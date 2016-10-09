@@ -200,6 +200,8 @@ const aboutView : View = function aboutView(payload) {
   );
 }
 
+let PageViewCases : Cases<View>;
+
 function skillSection(payload : {
   title : string;
   items : Array<string>;
@@ -391,6 +393,43 @@ function startReplay(dispatch : Dispatch) {
   return () => dispatch({ type: ActionType.StartReplay });
 }
 
+const view : View = function view(payload) {
+  const {dispatch} = payload;
+  const viewModel = getViewModel(payload);
+
+  return (
+    <div className="base-view" style={viewStyle}>
+      <div style={navBarStyle}>
+
+        <a style={githubLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
+          github
+        </a>
+
+        <div style={navItemStyle}>
+          <div style={linkBlockStyle} onClick={switchPage(Page.About, dispatch)}> about </div>
+        </div>
+
+        <div style={navItemStyle}>
+          <a style={linkBlockStyle} onClick={switchPage(Page.Resume, dispatch)}> resume </a>
+        </div>
+
+        <div style={navItemStyle}>
+          <a style={linkBlockStyle} onClick={switchPage(Page.Analytics, dispatch)}> analytics </a>
+        </div>
+
+        <div style={navItemStyle}>
+          <a style={linkBlockStyle} href="https://github.com/maxgurewitz/personal-site-typescript" target="_blank">
+            source
+          </a>
+        </div>
+      </div>
+      <div style={contentStyle}>
+        {evaluateCase(viewModel.page, PageViewCases)(payload)}
+      </div>
+    </div>
+  );
+}
+
 const analyticsView : View = function analyticsView(payload) {
   const {state, config, dispatch} = payload;
   const viewModel = getViewModel(payload);
@@ -444,7 +483,7 @@ const analyticsView : View = function analyticsView(payload) {
   );
 }
 
-const PageViewCases : Cases<View> = {
+PageViewCases = {
   [Page.About]: aboutView,
   [Page.Resume]: resumeView,
   [Page.Analytics]: analyticsView,
@@ -460,42 +499,6 @@ function getViewNode(payload : ViewPayload) : ViewNode {
   return state.viewTree[config.currentView];
 }
 
-const view : View = function view(payload) {
-  const {dispatch} = payload;
-  const viewModel = getViewModel(payload);
-
-  return (
-    <div className="base-view" style={viewStyle}>
-      <div style={navBarStyle}>
-
-        <a style={githubLinkStyle} href="https://github.com/maxgurewitz" target="_blank">
-          github
-        </a>
-
-        <div style={navItemStyle}>
-          <div style={linkBlockStyle} onClick={switchPage(Page.About, dispatch)}> about </div>
-        </div>
-
-        <div style={navItemStyle}>
-          <a style={linkBlockStyle} onClick={switchPage(Page.Resume, dispatch)}> resume </a>
-        </div>
-
-        <div style={navItemStyle}>
-          <a style={linkBlockStyle} onClick={switchPage(Page.Analytics, dispatch)}> analytics </a>
-        </div>
-
-        <div style={navItemStyle}>
-          <a style={linkBlockStyle} href="https://github.com/maxgurewitz/personal-site-typescript" target="_blank">
-            source
-          </a>
-        </div>
-      </div>
-      <div style={contentStyle}>
-        {evaluateCase(viewModel.page, PageViewCases)(payload)}
-      </div>
-    </div>
-  );
-}
 
 interface ViewModel {
   page: Page,
@@ -620,17 +623,19 @@ const viewUpdateCases : Cases<ViewUpdate> = {
   default: noOpUpdate
 };
 
+let updateCases : Cases<Update>;
+
+const updateCase : Update = function updateCase(state, action) {
+  return evaluateCase(action.type, updateCases)(state, action);
+}
+
 const update : Update = function update(state, action) {
   const clonedState = cloneDeep(state);
   clonedState.actions[clonedState.baseInitialViewIndex].push(action);
   return updateCase(clonedState, action);
 }
 
-const updateCase : Update = function updateCase(state, action) {
-  return evaluateCase(action.type, updateCases)(state, action);
-}
-
-const updateCases : Cases<Update> = {
+updateCases = {
   [ActionType.SwitchPage]: (state : State, action : Action) => {
     const {viewNodeIndex, page} = action.payload;
     const withPageUpdate = evaluateCase(action.payload, pageCases)(state, action);
@@ -707,7 +712,6 @@ interface EffectManager {
 }
 
 const playLoop : EffectManager = function playLoop({action, dispatch, getState}) {
-  console.log('loc1');
   const state = getState();
   const baseViewNode = state.viewTree[state.baseViewNodeIndex];
   const childViewNode = state.viewTree[baseViewNode.childNodeIndex];
@@ -723,9 +727,6 @@ const playLoop : EffectManager = function playLoop({action, dispatch, getState})
     const nextAction = childActions[childViewNode.actionIndex + 1];
     const timeToWait = nextAction.dateTime - currentAction.dateTime;
 
-    console.log('loc2', timeToWait);
-    // console.log('loc3', nextAction.dateTime, currentAction.dateTime);
-    console.log('loc3', nextAction, currentAction);
     // FIXME: IncrementChild actions don't have dateTime's because they're created in this middleware.  should probably skip them?
     setTimeout(() => {
       playLoop({action, dispatch, getState});
