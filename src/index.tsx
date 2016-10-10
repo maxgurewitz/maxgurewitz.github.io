@@ -7,6 +7,13 @@ import {GITHUB_LOGO, HEADSHOT} from './base-64-images';
 import {map, times, merge, cloneDeep, fromPairs} from 'lodash';
 import {v4 as uuid} from 'node-uuid';
 
+/* brainstorm
+
+1. view -> 2. inputs -> 3. command msg | msg -> 4. effectmanager -> 5. action msg -> 6. state -> 7. view
+
+
+*/
+
 // FIXME: seperate types for actions and cmds
 enum ActionType {
   SwitchPage,
