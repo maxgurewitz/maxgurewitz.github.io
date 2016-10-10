@@ -1,11 +1,14 @@
 import {Dispatch} from 'redux';
 
 interface State {
-  counter: number
+  counter: number,
+  isPlaying: boolean
 }
 
+type InputDispatch = Dispatch<Input>;
+
 interface Increment {
-  type: 'switchPage'
+  type: 'increment'
 }
 
 interface NoOp {
@@ -13,11 +16,15 @@ interface NoOp {
 }
 
 interface UpdatePlaying {
-  type: 'switchPage',
+  type: 'updatePlaying',
   isPlaying: boolean
 }
 
-type Msg = Increment | UpdatePlaying | NoOp; //etc.
+interface Init {
+  type: '@@redux/INIT'
+}
+
+type Msg = Increment | UpdatePlaying | NoOp | Init; //etc.
 
 interface Sleep {
   type: 'sleep',
