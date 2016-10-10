@@ -37,7 +37,7 @@ interface Sleep {
 
 interface Now {
   type: 'now',
-  toMsg: (number) : Msg
+  toMsg(time: number): Msg
 }
 
 type Cmd = Sleep | Now;
@@ -50,6 +50,41 @@ interface InputCmd {
 type Input = InputCmd | InputMsg;
 
 */
+
+interface SwitchPage {
+  type: 'switchPage',
+  page: Page
+}
+
+interface UpdatePlaying {
+  type: 'switchPage',
+  isPlaying: boolean
+}
+
+type Msg = SwitchPage | UpdatePlaying; //etc.
+
+interface Sleep {
+  type: 'sleep',
+  msg: Msg
+}
+
+interface Now {
+  type: 'now',
+  toMsg(time: number): Msg
+}
+
+interface InputMsg {
+  type: 'msg',
+  msg: Msg
+}
+
+interface InputCmd {
+  type: 'cmd',
+  cmd:  Cmd
+}
+
+type Cmd = Sleep | Now;
+type Input = InputCmd | InputMsg;
 
 // FIXME: seperate types for actions and cmds
 enum ActionType {
