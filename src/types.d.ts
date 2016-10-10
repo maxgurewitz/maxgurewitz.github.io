@@ -8,12 +8,16 @@ interface Increment {
   type: 'switchPage'
 }
 
+interface NoOp {
+  type: 'noOp'
+}
+
 interface UpdatePlaying {
   type: 'switchPage',
   isPlaying: boolean
 }
 
-type Msg = Increment | UpdatePlaying; //etc.
+type Msg = Increment | UpdatePlaying | NoOp; //etc.
 
 interface Sleep {
   type: 'sleep',
