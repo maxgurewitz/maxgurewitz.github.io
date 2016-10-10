@@ -9,8 +9,45 @@ import {v4 as uuid} from 'node-uuid';
 
 /* brainstorm
 
-1. view -> 2. inputs -> 3. command msg | msg -> 4. effectmanager -> 5. action msg -> 6. state -> 7. view
+1. View -> 2. event from environment  -> 3. Input -> 4. EffectManager -> 5. Msg -> 6. State -> 7. View
 
+FIXME: could be made more generic by allowing user (in this case me) to define arbitrary msg types
+
+interface SwitchPage {
+  type: 'switchPage',
+  page: Page
+}
+
+interface UpdatePlaying {
+  type: 'switchPage',
+  isPlaying: boolean
+}
+
+type Msg = SwitchPage | UpdatePlaying; //etc.
+
+interface InputMsg {
+  type: 'msg',
+  msg: Msg
+}
+
+interface Sleep {
+  type: 'sleep',
+  msg: Msg
+}
+
+interface Now {
+  type: 'now',
+  toMsg: (number) : Msg
+}
+
+type Cmd = Sleep | Now;
+
+interface InputCmd {
+  type: 'cmd',
+  cmd:  Cmd
+}
+
+type Input = InputCmd | InputMsg;
 
 */
 
