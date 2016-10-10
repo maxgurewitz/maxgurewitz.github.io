@@ -49,6 +49,13 @@ interface InputCmd {
 
 type Input = InputCmd | InputMsg;
 
+interface Messenger {
+  (Msg) : void;
+}
+
+interface EffectManager {
+  (Cmd, Messenger) : void
+}
 */
 
 interface SwitchPage {
