@@ -1,8 +1,8 @@
 import * as t from '../types';
 import * as React from 'react';
 
-function playInput(isPlaying : boolean, dispatch : t.InputDispatch) {
-  return () => dispatch({ type: 'msg', msg: { type: 'updatePlaying', isPlaying } });
+function playInput(dispatch : t.MsgDispatch) {
+  return () => dispatch({ type: 'togglePlaying' });
 }
 
 const mainView : t.View = function mainView(payload) {
@@ -14,7 +14,7 @@ const mainView : t.View = function mainView(payload) {
       <div>
         counter: { state.counter }
       </div>
-      <button onClick={playInput(!state.isPlaying, dispatch)} > {playMessage} </button>
+      <button onClick={playInput(dispatch)} > {playMessage} </button>
     </div>
   );
 }

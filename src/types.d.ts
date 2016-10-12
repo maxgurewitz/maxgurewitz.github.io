@@ -1,33 +1,35 @@
-import {Dispatch} from 'redux';
+import {Dispatch, MiddlewareAPI} from 'redux';
 
 interface State {
   counter: number,
   isPlaying: boolean
 }
 
-type InputDispatch = Dispatch<Input>;
+interface MsgDispatch {
+  (msg : Msg) : Msg
+}
 
-interface Increment {
-  type: 'increment'
+interface IncrementUntilDone {
+  type: 'incrementUntilDone'
 }
 
 interface NoOp {
   type: 'noOp'
 }
 
-interface UpdatePlaying {
-  type: 'updatePlaying',
-  isPlaying: boolean
+interface TogglePlaying {
+  type: 'togglePlaying'
 }
 
 interface Init {
   type: '@@redux/INIT'
 }
 
-type Msg = Increment | UpdatePlaying | NoOp | Init; //etc.
+type Msg = IncrementUntilDone | TogglePlaying | NoOp | Init; //etc.
 
 interface Sleep {
   type: 'sleep',
+  timeout: number,
   msg: Msg
 }
 
@@ -36,31 +38,38 @@ interface Now {
   toMsg(time: number): Msg
 }
 
-interface InputMsg {
-  type: 'msg',
+interface EffectManagers extends MiddlewareAPI<State> {
   msg: Msg
 }
 
-interface InputCmd {
-  type: 'cmd',
-  cmd:  Cmd
+interface NoCmd {
+  type: 'noCmd'
 }
 
-type Cmd = Sleep | Now;
-type Input = InputCmd | InputMsg;
+type Cmd = Sleep | Now | NoCmd;
 
 interface ViewConfig {
   viewDepth: number
 }
 
 interface Update {
-  (state : State, msg : Msg) : State;
+  (state : State, msg : Msg) : UpdateResponse;
+}
+
+interface UpdateResponse {
+  cmd: Cmd,
+  state: State
+}
+
+interface UpdateAction {
+  type: 'update',
+  state: State
 }
 
 interface ViewPayload {
   config : ViewConfig,
   state : State,
-  dispatch : Dispatch<Input>
+  dispatch : MsgDispatch
 }
 
 interface View {
