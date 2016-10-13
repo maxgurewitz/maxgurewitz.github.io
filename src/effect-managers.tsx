@@ -3,7 +3,7 @@ import {cloneDeep} from 'lodash';
 import * as t from './types';
 import update from './update';
 
-function getEffectManager({getState, dispatch, msg} : t.EffectManagers, cmd : t.Cmd) : t.EmptyFn {
+function getEffectManager({getState, dispatch, cmd} : t.GetEffectManagerPayload) : t.EmptyFn {
   switch (cmd.type) {
     case 'sleep':
       return () => {
@@ -13,7 +13,11 @@ function getEffectManager({getState, dispatch, msg} : t.EffectManagers, cmd : t.
       };
 
     case 'batch':
-      return () => {};
+      return () => {
+        cmd.cmds.forEach(subCmd => {
+          getEffectManager({getState, dispatch, cmd: subCmd})();
+        });
+      };
 
     case 'now':
       return () => {};
@@ -30,7 +34,7 @@ function effectManagers({getState, dispatch, msg} : t.EffectManagers) {
 
   dispatch({ type: 'update', state: updateResponse.state });
 
-  getEffectManager({getState, dispatch, msg}, updateResponse.cmd)();
+  getEffectManager({getState, dispatch, cmd: updateResponse.cmd})();
 }
 
 export default function effectManagersEntry({getState} : MiddlewareAPI<t.State>) {

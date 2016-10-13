@@ -59,6 +59,12 @@ interface Batch {
   cmds: Array<Cmd>
 }
 
+interface GetEffectManagerPayload {
+  cmd: Cmd,
+  dispatch: MsgDispatch,
+  getState(): State
+}
+
 interface EmptyFn {
   () : void
 }
