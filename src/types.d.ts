@@ -1,8 +1,14 @@
 import {Dispatch, MiddlewareAPI} from 'redux';
 
 interface State {
+  msgsHistory: Array<Msg>,
   counter: number,
   isPlaying: boolean
+}
+
+interface MsgMetadata {
+  msg: Msg,
+  timestamp: number
 }
 
 interface MsgDispatch {
@@ -46,7 +52,16 @@ interface NoCmd {
   type: 'noCmd'
 }
 
-type Cmd = Sleep | Now | NoCmd;
+type Cmd = Sleep | Now | NoCmd | Batch;
+
+interface Batch {
+  type: 'batch',
+  cmds: Array<Cmd>
+}
+
+interface EmptyFn {
+  () : void
+}
 
 interface ViewConfig {
   viewDepth: number

@@ -3,6 +3,26 @@ import {cloneDeep} from 'lodash';
 import * as t from './types';
 import update from './update';
 
+function getEffectManager({getState, dispatch, msg} : t.EffectManagers, cmd : t.Cmd) : t.EmptyFn {
+  switch (cmd.type) {
+    case 'sleep':
+      return () => {
+        setTimeout(() => {
+          effectManagers({getState, msg: cmd.msg, dispatch});
+        }, cmd.timeout);
+      };
+
+    case 'batch':
+      return () => {};
+
+    case 'now':
+      return () => {};
+
+    case 'noCmd':
+      return () => {};
+  }
+}
+
 function effectManagers({getState, dispatch, msg} : t.EffectManagers) {
   const state = cloneDeep(getState());
 
@@ -10,18 +30,7 @@ function effectManagers({getState, dispatch, msg} : t.EffectManagers) {
 
   dispatch({ type: 'update', state: updateResponse.state });
 
-  const cmd = updateResponse.cmd;
-
-  switch (cmd.type) {
-    case 'sleep':
-      setTimeout(() => {
-        effectManagers({getState, msg: cmd.msg, dispatch});
-      }, cmd.timeout);
-      break;
-
-    case 'noCmd':
-      break;
-  }
+  getEffectManager({getState, dispatch, msg}, updateResponse.cmd)();
 }
 
 export default function effectManagersEntry({getState} : MiddlewareAPI<t.State>) {
