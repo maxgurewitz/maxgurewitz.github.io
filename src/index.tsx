@@ -6,9 +6,10 @@ import * as t from './types';
 import initialView from './views/initial';
 import effectManagers from './effect-managers';
 
-const initialState = {
+const initialState : t.State = {
   counter: 1,
-  isPlaying: false
+  isPlaying: false,
+  msgHistory: []
 };
 
 const PersonalSite = connect((state : t.State) =>

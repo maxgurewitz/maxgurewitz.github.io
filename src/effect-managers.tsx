@@ -20,7 +20,11 @@ function getEffectManager({getState, dispatch, cmd} : t.GetEffectManagerPayload)
       };
 
     case 'now':
-      return () => {};
+      return () => {
+        const timestamp = Date.now();
+        const msg = cmd.toMsg(timestamp);
+        effectManagers({getState, msg, dispatch});
+      };
 
     case 'noCmd':
       return () => {};
