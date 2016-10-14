@@ -1,9 +1,7 @@
 import {Dispatch, MiddlewareAPI} from 'redux';
 
 interface State {
-  msgHistory: Array<MsgMetadata>,
-  counter: number,
-  isPlaying: boolean
+  msgHistory: Array<MsgMetadata>
 }
 
 interface MsgMetadata {
@@ -15,16 +13,8 @@ interface MsgDispatch {
   (msg : Msg) : Msg
 }
 
-interface IncrementUntilDone {
-  type: 'incrementUntilDone'
-}
-
 interface NoOp {
   type: 'noOp'
-}
-
-interface TogglePlaying {
-  type: 'togglePlaying'
 }
 
 interface PushMsgHistory {
@@ -37,7 +27,7 @@ interface Init {
   type: '@@redux/INIT'
 }
 
-type Msg = IncrementUntilDone | TogglePlaying | NoOp | Init | PushMsgHistory; //etc.
+type Msg = NoOp | Init | PushMsgHistory; //etc.
 
 interface Sleep {
   type: 'sleep',

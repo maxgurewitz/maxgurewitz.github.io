@@ -7,8 +7,6 @@ import initialView from './views/initial';
 import effectManagers from './effect-managers';
 
 const initialState : t.State = {
-  counter: 1,
-  isPlaying: false,
   msgHistory: []
 };
 
