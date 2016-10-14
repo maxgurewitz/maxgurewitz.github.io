@@ -1,6 +1,6 @@
 import {Dispatch, MiddlewareAPI} from 'redux';
 
-type Page = 'resume';
+type Page = 'resume' | 'about';
 
 interface State {
   msgHistory: Array<MsgMetadata>,
@@ -20,6 +20,11 @@ interface NoOp {
   type: 'noOp'
 }
 
+interface SwitchPage {
+  type: 'switchPage',
+  page: Page
+}
+
 interface PushMsgHistory {
   type: 'pushMsgHistory',
   msg: Msg,
@@ -30,7 +35,7 @@ interface Init {
   type: '@@redux/INIT'
 }
 
-type Msg = NoOp | Init | PushMsgHistory; //etc.
+type Msg = NoOp | Init | PushMsgHistory | SwitchPage; //etc.
 
 interface Sleep {
   type: 'sleep',

@@ -4,6 +4,10 @@ const noCmd : t.NoCmd = { type: 'noCmd' };
 
 const primaryUpdate : t.Update = function primaryUpdate(state, msg) {
   switch (msg.type) {
+    case 'switchPage':
+      state.page = msg.page;
+      return { state, cmd: noCmd };
+
     case 'pushMsgHistory':
       const msgMetadata = {msg: msg.msg, timestamp: msg.timestamp};
       state.msgHistory.push(msgMetadata);
