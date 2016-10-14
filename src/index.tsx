@@ -7,7 +7,8 @@ import initialView from './views/initial';
 import effectManagers from './effect-managers';
 
 const initialState : t.State = {
-  msgHistory: []
+  msgHistory: [],
+  page: 'resume'
 };
 
 const PersonalSite = connect((state : t.State) =>
