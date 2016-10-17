@@ -1,23 +1,51 @@
 import * as t from '../types';
 import * as React from 'react';
+import {navBarHeight} from '../settings';
 
 function switchPage(page : t.Page, dispatch : t.MsgDispatch) {
   return () => dispatch({ type: 'switchPage', page});
 }
 
+const navBarStyle = {
+  backgroundColor: 'white',
+  alignItems: 'center',
+  borderRadius: '.125em',
+  boxShadow: '0 .5em 1em 0 rgba(0,0,0,0.2),0 .375em 1.25em 0 rgba(0,0,0,0.19)',
+  color: 'white',
+  display: 'flex',
+  height: `${navBarHeight}em`,
+  left: 0,
+  margin: 0,
+  padding: '0 1em 0 1em',
+  position: 'absolute',
+  right: 0,
+  top: 0,
+  zIndex: 10
+};
+
+const navItemStyle = {
+  padding: '0 .5em 0 .5em',
+};
+
+const linkBlockStyle = {
+  color: 'black',
+  fontWeight: 400,
+  textDecoration: 'none'
+};
+
 const navbarView : t.View = function navbarView(payload) {
   const {dispatch} = payload;
   return (
-    <div>
-      <div>
-        <div onClick={switchPage('resume', dispatch)}> resume </div>
+    <div style={navBarStyle}>
+      <div style={navItemStyle}>
+        <div style={linkBlockStyle} onClick={switchPage('resume', dispatch)}> resume </div>
       </div>
 
-      <div>
-        <div onClick={switchPage('about', dispatch)}> about </div>
+      <div style={navItemStyle}>
+        <div style={linkBlockStyle} onClick={switchPage('about', dispatch)}> about </div>
       </div>
     </div>
   );
-}
+};
 
 export default navbarView;
