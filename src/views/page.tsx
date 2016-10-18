@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as t from '../types';
 import resume from './resume';
 import about from './about';
+import analytics  from './analytics';
 import {navBarHeight} from '../settings';
 
 const contentStyle = {
@@ -16,6 +17,9 @@ function pickView(page : t.Page) : t.View {
 
     case 'about':
       return about;
+
+    case 'analytics':
+      return analytics;
   }
 }
 

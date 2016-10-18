@@ -1,6 +1,6 @@
 import {Dispatch, MiddlewareAPI} from 'redux';
 
-type Page = 'resume' | 'about';
+type Page = 'resume' | 'about' | 'analytics';
 
 interface State {
   msgHistory: Array<MsgMetadata>,

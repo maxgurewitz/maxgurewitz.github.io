@@ -33,17 +33,21 @@ const linkBlockStyle = {
   textDecoration: 'none'
 };
 
+function linkItem(dispatch : t.MsgDispatch, linkName : t.Page) : JSX.Element {
+  return (
+    <div style={navItemStyle}>
+      <div style={linkBlockStyle} onClick={switchPage(linkName, dispatch)}> {linkName} </div>
+    </div>
+  );
+};
+
 const navbarView : t.View = function navbarView(payload) {
   const {dispatch} = payload;
+  const linkItems = ['resume', 'about', 'analytics'].map(linkItem.bind(null, dispatch));
+
   return (
     <div style={navBarStyle}>
-      <div style={navItemStyle}>
-        <div style={linkBlockStyle} onClick={switchPage('resume', dispatch)}> resume </div>
-      </div>
-
-      <div style={navItemStyle}>
-        <div style={linkBlockStyle} onClick={switchPage('about', dispatch)}> about </div>
-      </div>
+      {linkItems}
     </div>
   );
 };
