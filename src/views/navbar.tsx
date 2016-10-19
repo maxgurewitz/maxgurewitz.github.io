@@ -33,9 +33,9 @@ const linkBlockStyle = {
   textDecoration: 'none'
 };
 
-function linkItem(dispatch : t.MsgDispatch, linkName : t.Page) : JSX.Element {
+function linkItem(dispatch : t.MsgDispatch, linkName : t.Page, key : number) : JSX.Element {
   return (
-    <div style={navItemStyle}>
+    <div key={key} style={navItemStyle}>
       <div style={linkBlockStyle} onClick={switchPage(linkName, dispatch)}> {linkName} </div>
     </div>
   );
