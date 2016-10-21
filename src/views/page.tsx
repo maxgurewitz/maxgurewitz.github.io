@@ -4,6 +4,7 @@ import resume from './resume';
 import about from './about';
 import analytics  from './analytics';
 import {navBarHeight} from '../settings';
+import {getViewModel} from '../utils';
 
 const contentStyle = {
   width: '100%',
@@ -24,11 +25,11 @@ function pickView(page : t.Page) : t.View {
 }
 
 const pageView : t.View = function mainView(payload) {
-  const {state} = payload;
+  const view = getViewModel(payload);
 
   return (
     <div style={contentStyle}>
-      {pickView(state.page)(payload)}
+      {pickView(view.page)(payload)}
     </div>
   );
 }

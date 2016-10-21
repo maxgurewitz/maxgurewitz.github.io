@@ -1,9 +1,10 @@
 import * as t from '../types';
 import * as React from 'react';
 import {navBarHeight} from '../settings';
+import * as m from '../msg-builders';
 
 function switchPage(page : t.Page, dispatch : t.MsgDispatch) {
-  return () => dispatch({ type: 'switchPage', page});
+  return () => dispatch(m.switchPage(page));
 }
 
 const navBarStyle = {
@@ -42,8 +43,7 @@ function linkItem(dispatch : t.MsgDispatch, linkName : t.Page, key : number) : J
 };
 
 const navbarView : t.View = function navbarView(payload) {
-  const {dispatch} = payload;
-  const linkItems = ['resume', 'about', 'analytics'].map(linkItem.bind(null, dispatch));
+  const linkItems = ['resume', 'about', 'analytics'].map(linkItem.bind(null, payload.dispatch));
 
   return (
     <div style={navBarStyle}>

@@ -4,12 +4,25 @@ type Page = 'resume' | 'about' | 'analytics';
 
 interface State {
   msgHistory: Array<MsgMetadata>,
+  views: Array<ViewProgress>
+}
+
+interface ViewProgress {
+  msgIndex: number,
+  updatedView: ViewModel
+}
+
+interface ViewModel {
   page: Page
 }
 
 interface MsgMetadata {
-  msg: Msg,
+  viewMsg: ViewMsg,
   timestamp: number
+}
+
+interface MsgDispatch {
+  (msg : Msg) : Msg
 }
 
 interface MsgDispatch {
@@ -27,7 +40,7 @@ interface SwitchPage {
 
 interface PushMsgHistory {
   type: 'pushMsgHistory',
-  msg: Msg,
+  viewMsg: ViewMsg,
   timestamp: number
 }
 
@@ -35,7 +48,19 @@ interface Init {
   type: '@@redux/INIT'
 }
 
-type Msg = NoOp | Init | PushMsgHistory | SwitchPage; //etc.
+type ViewMsg = SwitchPage;
+
+interface IncrementMsg {
+  type: 'incrementMsg',
+  viewIndex: number
+}
+
+interface UpdateView {
+  type: 'updateView',
+  viewMsg: ViewMsg
+}
+
+type Msg = NoOp | Init | PushMsgHistory | IncrementMsg | UpdateView; //etc.
 
 interface Sleep {
   type: 'sleep',
@@ -74,7 +99,7 @@ interface EmptyFn {
 }
 
 interface ViewConfig {
-  viewDepth: number
+  viewIndex: number
 }
 
 interface Update {
@@ -84,6 +109,10 @@ interface Update {
 interface UpdateResponse {
   cmd: Cmd,
   state: State
+}
+
+interface ViewUpdate {
+  (view : ViewModel, msg : ViewMsg) : { view: ViewModel, cmd: Cmd }
 }
 
 interface UpdateAction {

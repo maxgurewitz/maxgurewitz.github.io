@@ -1,2 +1,2 @@
 export const navBarHeight = 3;
-export const other = 4;
+export const maxViewDepth = 10;

@@ -25,7 +25,7 @@ const styles = `
 
 const initialView : t.View = function initalView(payload) {
   const initialConfig = {
-    viewDepth: 1
+    viewIndex: 0
   };
 
   const mainContent = main({

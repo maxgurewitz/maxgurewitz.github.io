@@ -2,16 +2,45 @@ import * as t from './types';
 
 const noCmd : t.NoCmd = { type: 'noCmd' };
 
-const primaryUpdate : t.Update = function primaryUpdate(state, msg) {
+// FIXME: add view index to arguments
+const viewUpdate : t.ViewUpdate = function viewUpdate(view, msg) {
   switch (msg.type) {
     case 'switchPage':
-      state.page = msg.page;
-      return { state, cmd: noCmd };
+      view.page = msg.page;
+      return { view, cmd: noCmd };
+  }
+};
+
+const update : t.Update = function update(state, msg) {
+  switch (msg.type) {
+    case 'updateView':
+      const timestampCmd : t.Now = {
+        type: 'now',
+        toMsg: (timestamp : number) => ({ type: 'pushMsgHistory', viewMsg: msg.viewMsg, timestamp })
+      };
+
+      return {state, cmd: timestampCmd};
+
+    case 'incrementMsg':
+      const viewProgress = state.views[msg.viewIndex];
+      const {updatedView, msgIndex} = viewProgress;
+      const viewMsg = state.msgHistory[msgIndex].viewMsg;
+      const {view, cmd} = viewUpdate(updatedView, viewMsg);
+
+      viewProgress.updatedView = view;
+      viewProgress.msgIndex = msgIndex + 1;
+
+      return {state, cmd};
 
     case 'pushMsgHistory':
-      const msgMetadata = {msg: msg.msg, timestamp: msg.timestamp};
+      const msgMetadata = {viewMsg: msg.viewMsg, timestamp: msg.timestamp};
+      
       state.msgHistory.push(msgMetadata);
-      return { state, cmd: noCmd };
+
+      const updateResponse : t.UpdateResponse =
+        update(state, { type: 'incrementMsg', viewIndex: 0 });
+
+      return updateResponse;
 
     case 'noOp':
       return { state, cmd: noCmd };
@@ -20,22 +49,5 @@ const primaryUpdate : t.Update = function primaryUpdate(state, msg) {
       return { state, cmd: noCmd };
   }
 };
-
-const update : t.Update = function update(state, msg) {
-  const updateResult = primaryUpdate(state, msg);
-
-  const withTimestampCmd : t.Cmd = msg.type !== 'pushMsgHistory' ? {
-    type: 'batch',
-    cmds: [
-      updateResult.cmd,
-      {
-        type: 'now',
-        toMsg: (timestamp : number) => ({ type: 'pushMsgHistory', msg, timestamp })
-      }
-    ]
-  } : updateResult.cmd;
-
-  return {state: updateResult.state, cmd: withTimestampCmd};
-}
 
 export default update;
