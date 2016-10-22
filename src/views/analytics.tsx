@@ -25,7 +25,9 @@ const analyticsView : t.View = function analyticsView(payload) {
     borderStyle: 'solid',
     borderColor: '#ddd',
     margin: '0 auto',
-    borderWidth: '0 1px 1px 1px'
+    borderWidth: '0 1px 1px 1px',
+    lineHeight: '2em',
+    textAlign: 'center'
   };
 
   const nestedView = (config.viewIndex + 1) < state.views.length ?
@@ -41,7 +43,9 @@ const analyticsView : t.View = function analyticsView(payload) {
         {nestedView}
       </div>
       <div style={controlsContainerStyle}>
-        play
+        <div>
+          play
+        </div>
       </div>
     </div>
   );
