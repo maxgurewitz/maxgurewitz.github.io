@@ -13,7 +13,8 @@ interface ViewProgress {
 }
 
 interface ViewModel {
-  page: Page
+  page: Page,
+  isPlaying: boolean
 }
 
 interface MsgMetadata {

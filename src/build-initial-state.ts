@@ -4,13 +4,14 @@ import {times, cloneDeep} from 'lodash';
 
 export default function buildInitialState() : t.State {
   const initialView : t.ViewModel = {
-    page: 'resume'
+    page: 'resume',
+    isPlaying: false
   };
 
-  const views = times(maxViewDepth, () => ({
+  const views = times(maxViewDepth, () => (cloneDeep({
     msgIndex: 0,
     updatedView: initialView
-  }));
+  })));
 
   return {
     msgHistory: [],
