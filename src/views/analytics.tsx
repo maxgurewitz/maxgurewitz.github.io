@@ -3,11 +3,17 @@ import * as t from '../types';
 import * as React from 'react';
 import main from './main';
 import {baseFontSize, nestingFactor} from '../settings';
+import {getViewModel} from '../utils';
 
 const sizePercentage = (100/nestingFactor)+'%';
 
+function startReplay(dispatch : t.MsgDispatch) {
+  return () => {};
+}
+
 const analyticsView : t.View = function analyticsView(payload) {
-  const {state, config} = payload;
+  const {state, config, dispatch} = payload;
+  const view = getViewModel(payload);
 
   const nestedViewStyle = {
     position: 'relative',
@@ -37,14 +43,16 @@ const analyticsView : t.View = function analyticsView(payload) {
       state
     }) : "";
 
+  const playButtonText = view.isPlaying ? 'pause' : 'play';
+
   return (
     <div>
       <div style={nestedViewStyle} >
         {nestedView}
       </div>
       <div style={controlsContainerStyle}>
-        <div>
-          play
+        <div onClick={startReplay(dispatch)}>
+          {playButtonText}
         </div>
       </div>
     </div>

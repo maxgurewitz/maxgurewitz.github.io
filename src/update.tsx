@@ -25,7 +25,7 @@ const update : t.Update = function update(state, msg) {
       const viewProgress = state.views[msg.viewIndex];
       const {updatedView, msgIndex} = viewProgress;
       const viewMsg = state.msgHistory[msgIndex].viewMsg;
-      const {view, cmd} = viewUpdate(updatedView, viewMsg);
+      const {view, cmd} = viewUpdate(updatedView, viewMsg, msg.viewIndex);
 
       viewProgress.updatedView = view;
       viewProgress.msgIndex = msgIndex + 1;
@@ -34,7 +34,7 @@ const update : t.Update = function update(state, msg) {
 
     case 'pushMsgHistory':
       const msgMetadata = {viewMsg: msg.viewMsg, timestamp: msg.timestamp};
-      
+
       state.msgHistory.push(msgMetadata);
 
       const updateResponse : t.UpdateResponse =

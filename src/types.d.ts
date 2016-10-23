@@ -113,9 +113,13 @@ interface UpdateResponse {
 }
 
 interface ViewUpdate {
-  (view : ViewModel, msg : ViewMsg) : { view: ViewModel, cmd: Cmd }
+  (view : ViewModel, msg : ViewMsg, viewIndex: number) : ViewUpdateResult
 }
 
+interface ViewUpdateResult {
+  view: ViewModel,
+  cmd: Cmd
+}
 interface UpdateAction {
   type: 'update',
   state: State
