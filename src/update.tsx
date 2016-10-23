@@ -1,4 +1,5 @@
 import * as t from './types';
+import {setIsPlaying} from './msg-builders';
 
 const noCmd : t.NoCmd = { type: 'noCmd' };
 
@@ -7,11 +8,31 @@ const viewUpdate : t.ViewUpdate = function viewUpdate(view, msg) {
     case 'switchPage':
       view.page = msg.page;
       return view;
+
+    case 'setIsPlaying':
+      view.isPlaying = msg.isPlaying;
+      return view;
   }
 };
 
 const update : t.Update = function update(state, msg) {
   switch (msg.type) {
+    case 'toggleReplay': {
+      let updateResponse : t.UpdateResponse;
+
+      if (!state.view.isPlaying) {
+        updateResponse = update(state, setIsPlaying(true));
+      } else {
+        updateResponse = update(state, setIsPlaying(false));
+      }
+
+      return updateResponse;
+    }
+
+    case 'replayUntilDone': {
+      return {state, cmd: noCmd};
+    }
+
     case 'updateView':
       const timestampCmd : t.Now = {
         type: 'now',

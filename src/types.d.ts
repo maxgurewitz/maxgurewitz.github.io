@@ -50,7 +50,12 @@ interface Init {
   type: '@@redux/INIT'
 }
 
-type ViewMsg = SwitchPage;
+interface SetIsPlaying {
+  type: 'setIsPlaying',
+  isPlaying: boolean
+}
+
+type ViewMsg = SwitchPage | SetIsPlaying;
 
 interface IncrementMsg {
   type: 'incrementMsg',
@@ -62,7 +67,15 @@ interface UpdateView {
   viewMsg: ViewMsg
 }
 
-type Msg = NoOp | Init | PushMsgHistory | IncrementMsg | UpdateView; //etc.
+interface ToggleReplay {
+  type: 'toggleReplay'
+}
+
+interface ReplayUntilDone {
+  type: 'replayUntilDone'
+}
+
+type Msg = NoOp | Init | PushMsgHistory | IncrementMsg | UpdateView | ToggleReplay | ReplayUntilDone; //etc.
 
 interface Sleep {
   type: 'sleep',

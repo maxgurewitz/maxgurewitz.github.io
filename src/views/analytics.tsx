@@ -8,7 +8,7 @@ import {getViewModel} from '../utils';
 const sizePercentage = (100/nestingFactor)+'%';
 
 function startReplay(dispatch : t.MsgDispatch) {
-  return () => {};
+  return () => dispatch({ type: 'toggleReplay' });
 }
 
 const analyticsView : t.View = function analyticsView(payload) {
