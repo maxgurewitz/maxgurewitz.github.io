@@ -3,8 +3,9 @@ import {Dispatch, MiddlewareAPI} from 'redux';
 type Page = 'resume' | 'about' | 'analytics';
 
 interface State {
+  view: ViewModel,
   msgHistory: Array<MsgMetadata>,
-  views: Array<ViewProgress>
+  replayViews: Array<ViewProgress>
 }
 
 interface ViewProgress {
@@ -113,13 +114,9 @@ interface UpdateResponse {
 }
 
 interface ViewUpdate {
-  (view : ViewModel, msg : ViewMsg, viewIndex: number) : ViewUpdateResult
+  (view : ViewModel, msg : ViewMsg) : ViewModel
 }
 
-interface ViewUpdateResult {
-  view: ViewModel,
-  cmd: Cmd
-}
 interface UpdateAction {
   type: 'update',
   state: State

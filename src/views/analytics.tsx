@@ -36,7 +36,7 @@ const analyticsView : t.View = function analyticsView(payload) {
     textAlign: 'center'
   };
 
-  const nestedView = (config.viewIndex + 1) < state.views.length ?
+  const nestedView = config.viewIndex < state.replayViews.length ?
     main({
       config: { viewIndex: config.viewIndex + 1 },
       dispatch: identity,

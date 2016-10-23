@@ -8,13 +8,14 @@ export default function buildInitialState() : t.State {
     isPlaying: false
   };
 
-  const views = times(maxViewDepth, () => (cloneDeep({
+  const replayViews = times(maxViewDepth - 1, () => ({
     msgIndex: 0,
-    updatedView: initialView
-  })));
+    updatedView: cloneDeep(initialView)
+  }));
 
   return {
+    view: cloneDeep(initialView),
     msgHistory: [],
-    views
+    replayViews
   };
 }
