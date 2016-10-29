@@ -30,6 +30,21 @@ const update : t.Update = function update(state, msg) {
     }
 
     case 'replayUntilDone': {
+      if (state.view.isPlaying) {
+        let playingViewIndex = 0;
+
+        while (true) {
+          const viewProgress = state.replayViews[playingViewIndex];
+          if (viewProgress && viewProgress.updatedView.isPlaying) {
+            playingViewIndex++;
+          } else {
+            break;
+          }
+        }
+
+        const playingViews = state.replayViews.slice(0, playingViewIndex + 1);
+      }
+
       return {state, cmd: noCmd};
     }
 
