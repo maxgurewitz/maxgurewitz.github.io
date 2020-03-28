@@ -4,8 +4,8 @@
   "description": "Personal website.",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html",
+    "start": "parcel assets/index.html",
+    "build": "parcel build assets/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
