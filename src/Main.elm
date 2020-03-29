@@ -1,5 +1,9 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Html exposing (..)
+import Element exposing (text)
+import Html exposing (Html)
 
-main = text "Hello world"
+
+main : Html msg
+main =
+    Element.layout [] (text "Hello world")
